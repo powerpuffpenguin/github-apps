@@ -1,20 +1,21 @@
-######    install   ######
-function installHelp
+######    upgrade   ######
+function upgradeHelp
 {
-    echo "install apps"
+    echo "upgrade apps"
     echo
     echo "Usage:"
     echo "  $Command [flags]"
     echo
     echo "Flags:"
     echo "  -t, --test          test install but won't actually install to hard disk"
-    echo "  -v, --version       install version tag, only supported on install one app"
+    echo "  -v, --version       upgrade version tag, only supported on upgrade one app"
     echo "  -y, --yes           automatic yes to prompts"
     echo "  -n, --no            automatic no to prompts"
     echo "      --no-sum        don't validate archive hash"
     echo "  -h, --help          help for $Command"
 }
-function appsInstallOne
+
+function appsUpgradeOne
 {
     CallbackClear
     FlagsPush
@@ -30,7 +31,6 @@ function appsInstallOne
     if [[ $FlagTest != 0 ]];then
         flags="${flags}test "
     fi
-   
     source "$Configure/$app.sh"
 
     AppsPlatform
@@ -38,17 +38,29 @@ function appsInstallOne
         echo "FlagInstallDir not set"
         return 1
     fi
-    echo "Install '$app' to '$FlagInstallDir'"
+    echo "Upgrade '$app' on '$FlagInstallDir'"
     if [[ "$flags" != "" ]];then
         echo "$flags"
     fi
 
     AppsSetUrl
-    installExecute "$app"
+    upgradeExecute "$app"
 
     FlagsPop
 }
-function appsInstall
+
+function appsUpgradeAll
+{
+    local app
+    for app in $Apps
+    do
+        appVersionGet "$app"
+        if [[ "$appVersionGetValue" != "" ]];then
+            appsUpgradeOne "$app"
+        fi
+    done
+}
+function appsUpgrade
 {
     FlagsClear
 
@@ -92,19 +104,19 @@ function appsInstall
         ;;
     esac
     done
-    if [[ "${#@}" == 0 ]];then
-        echo Please enter the name of the apps you want to install
-        echo "Run '$Command --help' for usage."
+    if [[ "$FlagVersion" != "" && "${#@}" != 1 ]];then
+        echo "flag '-v, --version' only supported on upgrade one app"
         return 1
     fi
-    if [[ "$FlagVersion" != "" && "${#@}" != 1 ]];then
-        echo "flag '-v, --version' only supported on install one app"
-        return 1
+
+    if [[ "${#@}" == 0 ]];then
+        appsUpgradeAll
+        return
     fi
 
     local app
     for app in "$@"
     do
-        appsInstallOne "$app"
+        appsUpgradeOne "$app"
     done
 }

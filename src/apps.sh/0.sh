@@ -62,7 +62,7 @@ Apps=$(find "$Configure" -maxdepth 1 -name "*.sh" -type f | {
 })
 if [[ ! -d "$Cache" ]];then
     mkdir "$Cache"
-    chmod "$Cache" 777
+    chmod 777 "$Cache" 
 fi
 
 FlagsClear

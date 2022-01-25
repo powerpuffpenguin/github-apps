@@ -38,6 +38,12 @@ function appsMain
             appsList "$@"
             return $?
         ;;
+        upgrade)
+            shift
+            Command="$Command upgrade"
+            appsUpgrade "$@"
+            return $?
+        ;;
         *)
             if [[ "$1" == -* ]];then
                 echo Error: unknown flag "'$1'" for "$Command"

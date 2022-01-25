@@ -80,6 +80,7 @@ function build_merge
         cat "$dir/$str.sh" >> "$output"
         echo "" >> "$output"
     done
+    chmod a+x "$output"
 }
 function build_dir
 {

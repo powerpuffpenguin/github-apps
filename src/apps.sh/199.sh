@@ -10,6 +10,11 @@ function listHelp
     echo "  -v, --version       list apps installed version"
     echo "  -h, --help          help for $Command"
 }
+function appListOne
+{
+    appVersionGet "$1"
+    echo "$1 $appVersionGetValue"
+}
 function appsList
 {
     local version=0
@@ -42,7 +47,7 @@ function appsList
         local app
         for app in $Apps
         do
-            echo $app
+            appListOne "$app"
         done
     else
         echo $Apps
