@@ -1,15 +1,56 @@
+######    net request   ######
+function RequestDownload
+{
+    local file="$1"
+    local url
+    if [[ "$DevFile" == "" ]];then
+        url=$FlagDownloadFile
+    else
+        url=$DevFile
+    fi
+    echo curl -#Lo "$file" "$url"
+    curl -#Lo "$file" "$url"
+}
+RequestHashValue=""
+function RequestHash
+{
+    RequestHashValue=""
+    if [[ "$FlagDownloadHash" == "" ]];then
+        return
+    fi
+    echo curl -sL "$FlagDownloadHash"
+    local hash
+    if [[ "$DevHash" == "" ]];then
+        hash="$(curl -sL "$FlagDownloadHash")"
+    else
+        hash=$DevHash
+    fi
+    local str
+    for str in $hash
+    do
+        RequestHashValue=$str
+        break
+    done
+}
 # request version
 function RequestVersion
 {
     local version=$FlagVersion
     local url
     if [[ "$version" == "" ]];then
-        url=$FlagUrlLatest
+        if [[ "$DevUrlLatest" == "" ]];then
+            url=$FlagUrlLatest
+        else
+            url=$DevUrlLatest
+        fi
     else
-        url=$FlagUrlTag
+        if [[ "$DevUrlTag" == "" ]];then
+            url=$FlagUrlTag
+        else
+            url=$DevUrlTag
+        fi
     fi
     echo curl -H "Accept: application/vnd.github.v3+json" "$url"
-  
     eval $(curl -s -H "Accept: application/vnd.github.v3+json" "$url" | {
         local value
         declare -i depth=0
@@ -76,8 +117,30 @@ function RequestVersion
         echo "Parse response tag_name error"
         return 1
     fi
+    VersionNext "$tag_name"
+    if [[ "$VersionNextOk" == 0 ]];then
+        echo "not supported installed version: $tag_name"
+        return 1
+    fi
     FlagVersion="$tag_name"
 
-    AppsSetName
-    echo FlagDownloadName $FlagDownloadName
+    declare -i assets=$assetsSize
+    local i=0
+    local browser_download_url=""
+    local sha256_browser_download_url=""
+    for((;i<assets;i++))
+    do
+        eval "local name=\$name_$i"
+        eval "local url=\$url_$i"
+
+        AppsSetFile "$name" "$url"
+    done
+
+    if [[ "$FlagDownloadFile" == "" ]];then
+        echo "Parse assets not found download file" 
+        return 1
+    fi
+    if [[ "$FlagSum" == 0 ]];then
+        FlagDownloadHash=""
+    fi
 }

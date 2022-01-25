@@ -43,10 +43,9 @@ function appsInstallOne
 
     AppsPlatform
     AppsSetUrl
-    installExecute
+    installExecute "$app"
 
     FlagsPop
-    echo Success "$app"
 }
 function appsInstall
 {

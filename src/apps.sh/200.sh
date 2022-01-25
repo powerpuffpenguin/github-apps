@@ -53,4 +53,3 @@ function appsMain
     return 1
 }
 appsMain "$@"
-

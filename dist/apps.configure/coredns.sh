@@ -1,7 +1,9 @@
 selfName=""
+selfOS=""
 # Callback before install or upgrade or remove
 #
 # Usually here it is checked whether the platform is supported and a platform dependent variable can be set
+#  * FlagInstallDir
 function AppsPlatform
 {
     local os="linux"
@@ -9,9 +11,9 @@ function AppsPlatform
     local platform=$(uname)
     if [[ "$platform" =~ (MINGW)|(MSYS)|(_NT) ]];then
         os="windows"
-    elif [[ "$platform" =~ arwin ]];then 
+    elif [[ "$platform" =~ Darwin ]];then 
         os="darwin"
-    elif [[ "$platform" =~ inux ]];then 
+    elif [[ "$platform" =~ Linux ]];then 
         os="linux"
     else
         echo "Not Supported: coredns on $platform $arch"
@@ -23,7 +25,14 @@ function AppsPlatform
         echo "Not Supported: coredns on $platform $arch"
         return 1
     fi
+
     selfName="${os}_${arch}"
+    selfOS="$os"
+    
+    # set default install dir
+    if [[ "$FlagInstallDir" == "" ]];then
+        FlagInstallDir="/opt/coredns"
+    fi
     return 0
 }
 # Callback before install or upgrade, after AppsPlatform
@@ -42,15 +51,46 @@ function AppsSetUrl
     fi
     return 0
 }
-# Callback before install or upgrade, after AppsSetUrl
+# Callback in foreach assets, before install or upgrade, after AppsSetUrl
 #
 # Set the name of the compressed package resource to download
-#  * FlagDownloadName
+#  * FlagDownloadFile
 #  * FlagDownloadHash  if empty skip checksum
-function AppsSetName
+function AppsSetFile
 {
-    local version=${FlagVersion#v}
+    local name="$1"
+    local url="$2"
+    if [[ "$name" == *$selfName.tgz ]];then
+        FlagDownloadFile=$url
+    elif [[ "$name" == *$selfName.tgz.sha256 ]];then
+        FlagDownloadHash=$url
+    fi
+}
+# Unzip the package to the installation path
+function AppsUnpack
+{
+    local file="$1"
+    if [[ ! -d "$FlagInstallDir" ]];then
+        echo mkdir "$FlagInstallDir"
+        if [[ "$FlagTest" == 0 ]];then
+           mkdir "$FlagInstallDir"
+       fi
+    fi
+    echo tar -zxvf "$1" -C "$FlagInstallDir"
+    if [[ "$FlagTest" == 0 ]];then
+        tar -zxvf "$1" -C "$FlagInstallDir"
+    fi
 
-    FlagDownloadName="coredns_${version}_${selfName}.tgz"
-    FlagDownloadHash="$FlagDownloadName.sha256"
+    if [[ "$FlagTest" != 0 ]];then
+        return
+    fi
+
+    local file="$FlagInstallDir/Corefile"
+    if [[ ! -f "$file" ]];then
+        echo '.:10053 {
+	cache
+	forward . 127.0.0.1:10054 {
+	}
+}' > "$file"
+    fi
 }
