@@ -7,11 +7,13 @@ function listHelp
     echo "  $Command [flags]"
     echo
     echo "Flags:"
+    echo "  -v, --version       list apps installed version"
     echo "  -h, --help          help for $Command"
 }
 function appsList
 {
-    local ARGS=`getopt -o hl: --long help,lang: -n "$Command" -- "$@"`
+    local version=0
+    local ARGS=`getopt -o hv --long help,version -n "$Command" -- "$@"`
     eval set -- "${ARGS}"
     while true
     do
@@ -19,6 +21,10 @@ function appsList
         -h|--help)
             listHelp
             return 0
+        ;;
+        -v|--version)
+            version=1
+            shift   
         ;;
         --)
             shift
@@ -32,5 +38,13 @@ function appsList
     esac
     done
     
-    echo $Apps
+    if [[ $version == 1 ]];then
+        local app
+        for app in $Apps
+        do
+            echo $app
+        done
+    else
+        echo $Apps
+    fi
 }

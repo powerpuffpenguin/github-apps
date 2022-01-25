@@ -29,10 +29,8 @@ function AppsPlatform
     selfName="${os}_${arch}"
     selfOS="$os"
     
-    # set default install dir
-    if [[ "$FlagInstallDir" == "" ]];then
-        FlagInstallDir="/opt/coredns"
-    fi
+    # set install dir
+    FlagInstallDir="/opt/coredns"
     return 0
 }
 # Callback before install or upgrade, after AppsPlatform

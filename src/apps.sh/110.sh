@@ -8,7 +8,6 @@ function installHelp
     echo
     echo "Flags:"
     echo "  -t, --test          test install but won't actually install to hard disk"
-    echo "  -d, --dir        install dir"
     echo "  -v, --version       install version tag"
     echo "  -y, --yes           automatic yes to prompts"
     echo "  -n, --no            automatic no to prompts"
@@ -42,6 +41,10 @@ function appsInstallOne
     source "$Configure/$app.sh"
 
     AppsPlatform
+    if [[ "$FlagInstallDir" == "" ]];then
+        echo "FlagInstallDir not set"
+        return 1
+    fi
     AppsSetUrl
     installExecute "$app"
 
@@ -51,7 +54,7 @@ function appsInstall
 {
     FlagsClear
 
-    local ARGS=`getopt -o htd:v:yn --long help,test,dir:,version:,yes,no,no-sum -n "$Command" -- "$@"`
+    local ARGS=`getopt -o htv:yn --long help,test,version:,yes,no,no-sum -n "$Command" -- "$@"`
     eval set -- "${ARGS}"
     while true
     do
@@ -63,14 +66,6 @@ function appsInstall
         -t|--test)
             FlagTest=1
             shift
-        ;;
-        -d|--dir)
-            if [[ ! -d "$2" ]];then
-                echo "install dir not exists: $2"
-                return 1
-            fi
-            FlagInstallDir=$(cd "$2" && pwd)
-            shift 2
         ;;
         -v|--version)
             FlagVersion="$2"
