@@ -53,13 +53,33 @@ function build_merge
     # echo dir="$dir"
     # echo root="$root"
     # echo $output
-    find "$dir" -maxdepth 1 -name "*.sh" -type f | {
+    local str
+    str=$(find "$dir" -maxdepth 1 -name "*.sh" -type f | {
         while read file
         do
             name=$(basename "$file")
-            echo $name
+            if [[ "$name" =~ ^[0-9]+.sh$ ]];then
+                echo ${name%.sh}
+            else 
+                echo "not support merge file: $file" 1>&2
+                return 1
+            fi
         done
-    }
+        return 0
+    })
+    local strs
+    strs=$(echo "$str" |sort -n) 
+    declare -i offset=${#Dir}+1
+    echo "merge ${dir:offset} -> ${output:offset}"
+    echo '#!/usr/bin/env bash' > "$output"
+    echo "# merge bash" >> "$output"
+    for str in $strs
+    do
+        echo "  * $str.sh"
+        echo "######    ${dir:offset}/$str.sh   ######" >> "$output"
+        cat "$dir/$str.sh" >> "$output"
+        echo "" >> "$output"
+    done
 }
 function build_dir
 {
