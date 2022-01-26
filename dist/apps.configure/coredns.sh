@@ -65,6 +65,8 @@ function AppsSetFile
     fi
 }
 # Unzip the package to the installation path
+# 
+# The FlagTest flag should be evaluated to determine whether to actually operate
 function AppsUnpack
 {
     local file="$1"
@@ -79,16 +81,15 @@ function AppsUnpack
         tar -zxvf "$1" -C "$FlagInstallDir"
     fi
 
-    if [[ "$FlagTest" != 0 ]];then
-        return
-    fi
-
-    local file="$FlagInstallDir/Corefile"
     if [[ ! -f "$file" ]];then
-        echo '.:10053 {
+        echo "create default configure: $FlagInstallDir/Corefile"
+        if [[ "$FlagTest" == 0 ]];then
+            local file="$FlagInstallDir/Corefile"
+            echo '.:10053 {
 	cache
 	forward . 127.0.0.1:10054 {
 	}
 }' > "$file"
+        fi
     fi
 }

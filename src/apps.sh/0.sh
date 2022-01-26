@@ -22,9 +22,9 @@ function FlagsClear
     # if 0 not check sum
     FlagSum=1
 
-    # download file
+    # download file url
     FlagDownloadFile=""
-    # download hash file
+    # download hash file url
     FlagDownloadHash=""
     # http url return latest version info
     FlagUrlLatest=""
