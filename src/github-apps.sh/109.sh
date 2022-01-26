@@ -95,7 +95,7 @@ function installExecute
 
     # download
     local file="$Cache/$app"
-    RequestDownload "$file"
+    RequestDownload "$file" "$hash"
     if [[ $hash != "" ]];then
         local str
         str=$(AppsHash "$file")

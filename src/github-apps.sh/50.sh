@@ -2,6 +2,19 @@
 function RequestDownload
 {
     local file="$1"
+    local hash="$2"
+    if [[ -f "$file" && "$hash" != "" ]];then
+        local str=$(AppsHash "$file")
+        for str in $str
+        do
+            str=$str
+            break
+        done
+        if [[ "$str" == "$hash" ]];then
+            return
+        fi
+    fi
+
     local url
     if [[ "$DevFile" == "" ]];then
         url=$FlagDownloadFile
