@@ -58,11 +58,11 @@ github 上存在大量有用且有趣的開源項目，然而使用它們的一�
 * [remove](#remove)
 * [cache](#cache)
 
-**注意** 大部分指令都可以接受一個 `-t` 的 test 參數，使用此參數會執行所有工作但不會真是的更改應用安裝情況，你可以使用它來跟蹤打印信息以再操作前確認下會如何修改系統檔案
+**注意** 大部分指令都可以接受一個 `-t` 的 test 參數，使用此參數會執行所有工作但不會真實的更改應用安裝情況，你可以使用它來跟蹤打印信息以便在操作前可以確認下會如何修改系統檔案
 
 ## completion
 
-completion 子命令用於爲 bash 生成終端完成的代碼。強烈建議使用如果沒有自動完成，那麼 linux 的 shell 和 windows 的 cmd 那條鹹魚間還有什麼區別😂，輸入 `-h` 參數可查看詳細說明
+completion 子命令用於爲 bash 生成命令自動完成的代碼。強烈建議使用如果沒有自動完成，那麼 linux 的 shell 和 windows 的 cmd 那條鹹魚間還有什麼區別😂，輸入 `-h` 參數可查看詳細說明
 ```
 github-apps.sh completion -h
 ```
@@ -72,13 +72,13 @@ github-apps.sh completion -h
 source <(github-apps.sh completion)
 ```
 
-對於 *inux 系統可以執行如下指令，使所有新打開的shell 都獲取自動完成功能
+對於 *inux 系統可以執行如下指令，使所有新打開的 shell 都獲取自動完成功能
 
 ```
 github-apps.sh completion > /etc/bash_completion.d/github-app.sh
 ```
 
-對於 MacOS 可以執行如下指令，使所有新打開的shell 都獲取自動完成功能
+對於 MacOS 可以執行如下指令，使所有新打開的 shell 都獲取自動完成功能
 
 ```
 github-apps.sh completion > /usr/local/etc/bash_completion.d/github-app.sh
@@ -170,7 +170,7 @@ github-apps.sh remove coredns ariang
 github-apps.sh remove coredns -a
 ```
 
-**注意** 實際的刪除工作是由配置應用的腳本完成的，默認提供的配置腳本都遵循了 `-c -d` 參數的提示工作，但如果你使用第三方提供的配置腳本需要自己確定配置腳本是否遵循了這個設計要求
+**注意** 實際的刪除工作是由應用的配置腳本完成的，默認提供的配置腳本都遵循了 `-c -d` 參數的提示工作，但如果你使用第三方提供的配置腳本需要自己確定配置腳本是否遵循了這個設計要求
 
 ## cache
 
@@ -187,7 +187,7 @@ github-app.sh cache -h
 github-app.sh cache
 ```
 
-下面指令清空緩存大小
+下面指令清空緩存
 ```
 github-app.sh cache -d
 ```
@@ -205,7 +205,7 @@ MAJOR MINOR PATCH 是一個正整數，MAJOR 是主版本號，當應用升級�
 
 不同的開源應用安裝配置都各不相同，爲了支持它們需要創建**配置腳本**。github-apps.sh 負責解析用戶傳入的參數，查找應用版本並下載等複雜的操作，而用戶需要自己爲應用編寫配置腳本用於指定安裝路徑，解壓壓縮包到磁盤，刪除磁盤等操作。
 
-配置腳本需要是置到 github-apps.sh 所在路徑的 **github-apps.configure** 檔案夾下，並且以 .sh 爲後綴的 bash 腳本。github-apps.sh 會使用 source 來加載配置腳本。
+配置腳本需要設置到 github-apps.sh 所在路徑的 **github-apps.configure** 檔案夾下並且以 .sh 爲後綴的 bash 腳本。github-apps.sh 會使用 source 來加載配置腳本。
 
 你可以參考 [內置的配置腳本](https://github.com/powerpuffpenguin/github-apps/tree/main/bin/github-apps.configure) 來實現自己的配置腳本，本喵推薦查看 [coredns.sh](https://github.com/powerpuffpenguin/github-apps/blob/main/bin/github-apps.configure/coredns.sh) 這個腳本裏面帶有詳細的註釋說明，其它內置腳本可能沒有完整的註釋
 
@@ -221,7 +221,7 @@ MAJOR MINOR PATCH 是一個正整數，MAJOR 是主版本號，當應用升級�
 
 github-apps.sh 中定義了幾個全局變量，配置腳本和 github-apps.sh 需要通過這幾個變量進行通信(誰讓 bash 函數連返回值都沒有呢😂)
 
-|變量名|值|描述|
+|變量名|型別|描述|
 |--|--|--|
 |FlagPlatformError  |字符串 |如果平臺不支持應用，請將錯誤描述設置到此變量|
 |FlagInstallDir|    字符串| 安裝路徑|
@@ -229,11 +229,11 @@ github-apps.sh 中定義了幾個全局變量，配置腳本和 github-apps.sh �
 |FlagVersion   | 字符串| 目標版本|
 |FlagYes   | 0 或者 1| 如果爲 1，自動回覆 yes|
 |FlagNo   | 0 或者 1| 如果爲 1，自動回覆 no|
-|FlagSum | 0 或者 1|    如果爲 1，需要檢測下載不 sum|
+|FlagSum | 0 或者 1|    如果爲 1，需要檢測下載安裝包的 checksum|
 |FlagDeleteConf| 0 或者 1|    如果爲 1，刪除應用配置檔案|
 |FlagDeleteData| 0 或者 1|    如果爲 1，刪除應用數據檔案|
 |FlagDownloadFile| 字符串|    應用安裝包下載地址|
-|FlagDownloadHash| 字符串|    包含安裝包 sum 值的網址|
+|FlagDownloadHash| 字符串|    包含安裝包 checksum 網址|
 |FlagUrlLatest| 字符串|    [github api 獲取最後發佈版本的地址](https://docs.github.com/en/rest/reference/releases#get-the-latest-release)|
 |FlagUrlList| 字符串|    [github api 獲取版本列表的地址](https://docs.github.com/en/rest/reference/releases#list-releases)|
 |FlagUrlTag| 字符串|    [github api 獲取指定版本的地址](https://docs.github.com/en/rest/reference/releases#get-a-release-by-tag-name)|
@@ -244,7 +244,7 @@ github-apps.sh 中定義了幾個全局變量，配置腳本和 github-apps.sh �
 
 ### AppsPlatform
 
-這個函數會是第一個被調用的函數，你應該在裏面檢測是否支持當前應用如果不支持就設置 **FlagPlatformError** 變量爲非空，這樣 github-apps.sh 就會將 FlagPlatformError 以錯誤信息輸出並結束工作。不要以在此函數裏面使用 echo 輸出，而是將錯誤信息設置到 FlagPlatformError 因爲，github-apps.sh 會在很多不希望輸出錯誤信息時調用 AppsPlatform 用以檢測應用是否支持當前平臺
+這個函數會是第一個被調用的函數，你應該在裏面檢測系統平臺是否支持當前應用如果不支持就設置 **FlagPlatformError** 變量爲非空，這樣 github-apps.sh 就會將 FlagPlatformError 以錯誤信息輸出並結束工作。不要在此函數裏面使用 echo 輸出，而是將錯誤信息設置到 FlagPlatformError，因爲 github-apps.sh 會在很多不希望輸出錯誤信息時調用 AppsPlatform 用以檢測應用是否支持當前平臺
 
 如果當前平臺支持應用，則你需要將應用安裝路徑設置到 **FlagInstallDir** 變量中
 
@@ -252,7 +252,7 @@ github-apps.sh 中定義了幾個全局變量，配置腳本和 github-apps.sh �
 
 在執行安裝或升級之前會調用此函數，你需要設置好 **FlagUrlLatest** **FlagUrlList** **FlagUrlTag** 三個變量來告訴 github-apps.sh 到哪裏去查找應用版本信息
 
-此外你可以檢測 **FlagVersion** 爲不空則代表用戶指定了一個版本號，只有在此時才需要設置 **FlagUrlTag** 變量
+此外你可以檢測 **FlagVersion** 不爲空則代表用戶指定了一個版本號，只有在此時才需要設置 **FlagUrlTag** 變量
 
 ### AppsSetFile
 
@@ -260,7 +260,7 @@ github-apps.sh 中定義了幾個全局變量，配置腳本和 github-apps.sh �
 
 你需要依據資產名稱確定是否是當前平臺的安裝包，如果是則設置下載地址到變量 **FlagDownloadFile** 中
 
-同時如果你查找的 checksum 檔案，則可以設置它的下載地址到 **FlagDownloadHash** 中，這樣在安裝前會檢測下載包的 checksum 值
+同時如果你查找到 checksum 檔案，則可以設置它的下載地址到 **FlagDownloadHash** 中，這樣在安裝前會檢測下載包的 checksum 值
 
 ### AppsHash
 
@@ -278,7 +278,7 @@ AppsUnpack 的第一個傳入參數是下載的安裝包路徑，你需要在此
 
 ### AppsRemove
 
-當刪除應用時會調用 AppsRemove 回調，你應該在此函數中刪除安裝到**FlagInstallDir** 路徑中的應用
+當刪除應用時會調用 AppsRemove 回調，你應該在此函數中刪除安裝到 **FlagInstallDir** 路徑中的應用
 
 記得在真實刪除應用前檢測 **FlagTest** 變量如果爲非 0，則代表用戶只是想測試看看，不要執行真實的刪除應該只是打印下刪除流程就好
 
@@ -288,7 +288,7 @@ AppsVersion 是可選實現的
 
 如果傳入的第二個參數爲空字符串則需要返回當前安裝的應用版本號到變量 **AppsVersionValue** 中
 
-如果傳入的第二個參數爲非空字符串則第二個參數是正在安裝的應用版本號，你需要將到設置到某處以便可以返回版本號供 github-apps.sh 查詢
+如果傳入的第二個參數爲非空字符串則第二個參數是正在安裝的應用版本號，你需要將到它持久化到某處以便日後可以返回版本號供 github-apps.sh 查詢
 
 當沒有實現 AppsVersion 函數時，默認的行爲是在 FlagInstallDir 指定的安裝路徑下創建一個 apps.version 檔案用於記錄應用版本號
 
@@ -300,8 +300,8 @@ github-apps.sh 默認只能支持 github 上發佈的應用，因爲它只解析
 
 如果配置腳本提供了此函數則會替代默認的版本請求，你需要在此函數中
 
-1. 依據全局變量**RequestVersion** 如果爲空查找最後的發佈的完整版本信息，如果非空查找指定的版本信息。
-2. 調用 `VersionNext "找到的版本號"` 函數設置並且判斷 **VersionNextOk** 確定版本號格式被支持
+1. 依據全局變量 **RequestVersion** 如果爲空查找最後的發佈的完整版本信息，如果非空查找指定的版本信息。
+2. 調用 `VersionNext "找到的版本號"` 函數進行設置，並且判斷返回值 **VersionNextOk** 爲 1 以確定版本號格式被支持
 3. 將找到的版本號設置到變量 **FlagVersion** 中
 4. 將安裝包下載地址設置到 **FlagDownloadFile** 變量
 5. 如果存在 checksum 且 **FlagSum** 變量爲 0，則將 checksum 下載地址設置到 **FlagDownloadHash** 變量
@@ -310,7 +310,7 @@ github-apps.sh 默認只能支持 github 上發佈的應用，因爲它只解析
 
 如過配置腳本提供了此函數，則當最後發佈的版本與當前安裝的版本不匹配時，調用此函數查找最後的可升級版本。你需要在此函數中
 1. 查找到最後的可升級版本
-2. 調用 `VersionNext "找到的版本號"` 函數設置並且判斷 **VersionNextOk** 確定版本號格式被支持
+2. 調用 `VersionNext "找到的版本號"` 函數進行設置，並且判斷返回值 **VersionNextOk** 爲 1 以確定版本號格式被支持
 3. 將找到的版本號設置到變量 **FlagVersion** 中
 4. 將安裝包下載地址設置到 **FlagDownloadFile** 變量
 5. 如果存在 checksum 且 **FlagSum** 變量爲 0，則將 checksum 下載地址設置到 **FlagDownloadHash** 變量
