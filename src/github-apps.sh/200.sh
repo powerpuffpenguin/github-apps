@@ -58,7 +58,7 @@ function appsMain
         remove)
             shift
             Command="$Command remove"
-            appsRemove "$@"
+            appRemove "$@"
             return $?
         ;;
         cache)

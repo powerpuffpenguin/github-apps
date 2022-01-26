@@ -20,7 +20,7 @@ function removeHelp
     echo "  -d, --data          delete the application, also delete the data file"
     echo "  -h, --help          help for $Command"
 }
-function appsRemoveOne
+function appRemoveOne
 {
     CallbackClear
     FlagsPush
@@ -52,11 +52,11 @@ function appsRemoveOne
         echo "$flags"
     fi
 
-    RemoveUnpack "$app"
+    AppsRemove "$app"
     
     FlagsPop
 }
-function appsRemove
+function appRemove
 {
     FlagsClear
 
@@ -107,6 +107,6 @@ function appsRemove
     local app
     for app in "$@"
     do
-        appsRemoveOne "$app"
+        appRemoveOne "$app"
     done
 }

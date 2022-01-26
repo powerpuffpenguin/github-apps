@@ -20,9 +20,9 @@ function AppsUnpack
     echo function AppsUnpack not implemented
     return 1
 }
-function RemoveUnpack
+function AppsRemove
 {
-    echo function RemoveUnpack not implemented
+    echo function AppsRemove not implemented
     return 1
 }
 function AppsHash

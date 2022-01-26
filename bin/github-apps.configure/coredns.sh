@@ -114,7 +114,7 @@ function AppsUnpack
         fi
     fi
 }
-function RemoveUnpack
+function AppsRemove
 {
     local dir=$FlagInstallDir
     local file="$dir/coredns"

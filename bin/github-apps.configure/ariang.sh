@@ -34,7 +34,7 @@ function AppsUnpack
         unzip -d "$FlagInstallDir" -o "$file"
     fi
 }
-function RemoveUnpack
+function AppsRemove
 {
     if [[ -d "$FlagInstallDir" ]];then
         echo rm "$FlagInstallDir" -rf
