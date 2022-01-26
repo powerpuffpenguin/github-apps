@@ -28,7 +28,7 @@ function appsMain
             return 0
         ;;
         -v|--version)
-            echo "v1.0.0"
+            echo "$Apps_Version"
             return 0
         ;;
         completion)

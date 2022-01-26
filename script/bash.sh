@@ -141,4 +141,6 @@ function build_dir
     }
 }
 cd $Dir
+version="src/github-apps.sh/2.sh"
+echo "Apps_Version=\"$Version\"" > "$version"
 build_dir "$Input"

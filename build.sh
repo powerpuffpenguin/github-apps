@@ -17,7 +17,8 @@ function help(){
     echo
     echo "Available Commands:"
     echo "  help              help for $0"
-    echo "  bash             build bash src"
+    echo "  bash              build bash src"
+    echo "  pack              pack release"
     echo
     echo "Flags:"
     echo "  -h, --help          help for $0"
@@ -31,6 +32,11 @@ case "$1" in
         shift
         export Command="$0 bash"
         "$BashDir/script/bash.sh" "$@"
+    ;;
+    pack)
+        shift
+        export Command="$0 pack"
+        "$BashDir/script/pack.sh" "$@"
     ;;
     *)
         if [[ "$1" == "" ]];then
