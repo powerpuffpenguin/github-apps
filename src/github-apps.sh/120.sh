@@ -3,6 +3,17 @@ function upgradeHelp
 {
     echo "upgrade apps"
     echo
+    echo "Example:"
+    echo "  # upgrade coredns"
+    echo "  $Command coredns"
+    echo "  $Command coredns -v v1.8.7"
+    echo
+    echo "  # upgrade multiple apps"
+    echo "  $Command coredns ariang"
+    echo
+    echo "  # upgrade all installed apps"
+    echo "  $Command"
+    echo
     echo "Usage:"
     echo "  $Command [flags]"
     echo
@@ -68,7 +79,7 @@ function appsUpgradeAll
     local app
     for app in $Apps
     do
-        appsUpgradePush
+        appsUpgradePush "$app"
 
         AppsPlatform
         if [[ "$FlagPlatformError" != "" || "$FlagInstallDir" == "" ]];then
@@ -94,7 +105,7 @@ function appsUpgrade
     do
     case "$1" in
         -h|--help)
-            installHelp
+            upgradeHelp
             return 0
         ;;
         -t|--test)

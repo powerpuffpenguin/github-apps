@@ -1,14 +1,13 @@
-######    install   ######
-function installHelp
+######    remove   ######
+function removeHelp
 {
-    echo "install apps"
+    echo "remove apps"
     echo
     echo "Example:"
-    echo "  # install coredns"
+    echo "  # remove coredns"
     echo "  $Command coredns"
-    echo "  $Command coredns -v v1.8.7"
     echo
-    echo "  # install multiple apps"
+    echo "  # remove multiple apps"
     echo "  $Command coredns ariang"
     echo
     echo "Usage:"
@@ -16,31 +15,30 @@ function installHelp
     echo
     echo "Flags:"
     echo "  -t, --test          test install but won't actually install to hard disk"
-    echo "  -v, --version       install version tag, only supported on install one app"
-    echo "  -y, --yes           automatic yes to prompts"
-    echo "  -n, --no            automatic no to prompts"
-    echo "      --no-sum        don't validate archive hash"
+    echo "  -a, --all           delete the application, also delete the configuration file and data file"
+    echo "  -c, --conf           delete the application, also delete the configuration file"
+    echo "  -d, --data            delete the application, also delete the data file"
     echo "  -h, --help          help for $Command"
 }
-function appsInstallOne
+function appsRemoveOne
 {
     CallbackClear
     FlagsPush
 
     local app="$1"
     local flags=""
-    if [[ "$FlagVersion" != "" ]];then
-        flags="$FlagVersion "
-    fi
-    if [[ $FlagSum == 0 ]];then
-        flags="${flags}no-sum "
-    fi
     if [[ $FlagTest != 0 ]];then
         flags="${flags}test "
     fi
+    if [[ $FlagDeleteConf != 0 ]];then
+        flags="${flags}delete-conf "
+    fi
+    if [[ $FlagDeleteData != 0 ]];then
+        flags="${flags}delete-data "
+    fi
    
     source "$Configure/$app.sh"
-
+   
     AppsPlatform
     if [[ "$FlagPlatformError" != "" ]];then
         echo "$FlagPlatformError"
@@ -49,47 +47,43 @@ function appsInstallOne
         echo "FlagInstallDir not set"
         return 1
     fi
-    echo "Install '$app' to '$FlagInstallDir'"
+    echo "Remove '$app' from '$FlagInstallDir'"
     if [[ "$flags" != "" ]];then
         echo "$flags"
     fi
 
-    AppsSetUrl
-    installExecute "$app"
-
+    RemoveUnpack "$app"
+    
     FlagsPop
 }
-function appsInstall
+function appsRemove
 {
     FlagsClear
 
-    local ARGS=`getopt -o htv:yn --long help,test,version:,yes,no,no-sum -n "$Command" -- "$@"`
+    local ARGS=`getopt -o htacd --long help,test,all,conf,data -n "$Command" -- "$@"`
     eval set -- "${ARGS}"
     while true
     do
     case "$1" in
         -h|--help)
-            installHelp
+            removeHelp
             return 0
         ;;
         -t|--test)
             FlagTest=1
             shift
         ;;
-        -v|--version)
-            FlagVersion="$2"
-            shift 2
-        ;;
-        -y|--yes)
-            FlagYes=1
+        -a|--all)
+            FlagDeleteConf=1
+            FlagDeleteData=1
             shift
         ;;
-        -n|--no)
-            FlagNo=1
+        -c|--conf)
+            FlagDeleteConf=1
             shift
         ;;
-        --no-sum)
-            FlagSum=0
+        -d|--data)
+            FlagDeleteData=1
             shift
         ;;
         --)
@@ -104,18 +98,14 @@ function appsInstall
     esac
     done
     if [[ "${#@}" == 0 ]];then
-        echo Please enter the name of the apps you want to install
+        echo Please enter the name of the apps you want to remove
         echo "Run '$Command --help' for usage."
-        return 1
-    fi
-    if [[ "$FlagVersion" != "" && "${#@}" != 1 ]];then
-        echo "flag '-v, --version' only supported on install one app"
         return 1
     fi
 
     local app
     for app in "$@"
     do
-        appsInstallOne "$app"
+        appsRemoveOne "$app"
     done
 }

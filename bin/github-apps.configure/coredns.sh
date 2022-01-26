@@ -71,7 +71,6 @@ function AppsVersion
     local version="$2"
     if [[ "$version" == "" ]];then
         local exe="$FlagInstallDir/coredns"
-        echo "$exe"
         if [[ -f "$exe" ]];then
             local str=$("$exe" -version )
             for str in $str
@@ -95,8 +94,8 @@ function AppsUnpack
     if [[ ! -d "$FlagInstallDir" ]];then
         echo mkdir "$FlagInstallDir"
         if [[ "$FlagTest" == 0 ]];then
-           mkdir "$FlagInstallDir"
-       fi
+            mkdir "$FlagInstallDir"
+        fi
     fi
     echo tar -zxvf "$1" -C "$FlagInstallDir"
     if [[ "$FlagTest" == 0 ]];then
@@ -112,6 +111,26 @@ function AppsUnpack
 	forward . 127.0.0.1:10054 {
 	}
 }' > "$file"
+        fi
+    fi
+}
+function RemoveUnpack
+{
+    local dir=$FlagInstallDir
+    local file="$dir/coredns"
+    if [[ -f "$file" ]];then
+        echo rm "$file"
+        if [[ "$FlagTest" == 0 ]];then
+            rm "$file"
+        fi
+    fi
+    if [[ "$FlagDeleteConf" != 0 ]];then
+        local conf="$dir/Corefile"
+        if [[ -f "$conf" ]];then
+            echo rm "$conf"
+            if [[ "$FlagTest" == 0 ]];then
+                rm "$conf"
+            fi
         fi
     fi
 }

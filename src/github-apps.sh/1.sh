@@ -20,6 +20,11 @@ function AppsUnpack
     echo function AppsUnpack not implemented
     return 1
 }
+function RemoveUnpack
+{
+    echo function RemoveUnpack not implemented
+    return 1
+}
 function AppsHash
 {
     sha256sum "$1"

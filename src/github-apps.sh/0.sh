@@ -1,11 +1,11 @@
 ######    configure   ######
 set -e
 
-DevUrlLatest="http://192.168.251.50/tools/dev/github_coredns_latest.json"
-DevUrlList="http://192.168.251.50/tools/dev/github_coredns_list.json"
-DevUrlTag="http://192.168.251.50/tools/dev/github_coredns_v1.7.1.json"
-DevHash="40a0382681a8133f6612171fc8df0fc3403a28bd11f889c8f82a92039969d0b6"
-DevFile="http://192.168.251.50/tools/dev/coredns_1.8.7_linux_amd64.tgz"
+# DevUrlLatest="http://192.168.251.50/tools/dev/github_coredns_latest.json"
+# DevUrlList="http://192.168.251.50/tools/dev/github_coredns_list.json"
+# DevUrlTag="http://192.168.251.50/tools/dev/github_coredns_v1.7.1.json"
+# DevHash="40a0382681a8133f6612171fc8df0fc3403a28bd11f889c8f82a92039969d0b6"
+# DevFile="http://192.168.251.50/tools/dev/coredns_1.8.7_linux_amd64.tgz"
 
 function FlagsClear
 {
@@ -24,6 +24,11 @@ function FlagsClear
     FlagNo=0
     # if 0 not check sum
     FlagSum=1
+    
+    # if not 0 delete configuration file
+    FlagDeleteConf=0
+    # if not 0 delete data file
+    FlagDeleteData=0
 
     # download file url
     FlagDownloadFile=""
@@ -80,6 +85,9 @@ function FlagsPush
     __FlagNo=$FlagNo
     __FlagSum=$FlagSum
 
+    __FlagDeleteConf=$FlagDeleteConf
+    __FlagDeleteData=$FlagDeleteData
+
     __FlagDownloadFile=$FlagDownloadFile
     __FlagDownloadHash=$FlagDownloadHash
     __FlagUrlLatest=$FlagUrlLatest
@@ -88,7 +96,7 @@ function FlagsPush
 }
 function FlagsPop
 {
-    FlagPlatformError=__$FlagPlatformError
+    FlagPlatformError=$__FlagPlatformError
     
     FlagTest=$__FlagTest
     FlagInstallDir=$__FlagInstallDir
@@ -96,6 +104,9 @@ function FlagsPop
     FlagYes=$__FlagYes
     FlagNo=$__FlagNo
     FlagSum=$__FlagSum
+
+    FlagDeleteConf=$__FlagDeleteConf
+    FlagDeleteData=$__FlagDeleteData
 
     FlagDownloadFile=$__FlagDownloadFile
     FlagDownloadHash=$__FlagDownloadHash

@@ -1,21 +1,21 @@
 ######    main   ######
 function mainHelp
 {
-    echo "a bash script used to apps manage"
+    echo "A bash script to manage apps installed from github"
     echo
     echo "Usage:"
     echo "  $Command [flags]"
     echo "  $Command [command]"
     echo
     echo "Available Commands:"
-    
-    echo "  install           install apps"
     echo "  list              list apps"
+    echo "  install           install apps"
     echo "  upgrade           upgrade apps"
     echo "  remove            remove apps"
     echo "  cache             cache manage"
     echo
     echo "Flags:"
+    echo "  -v, --version       show version"
     echo "  -h, --help          help for $Command"
 }
 
@@ -24,6 +24,10 @@ function appsMain
     case "$1" in
         -h|--help)
             mainHelp
+            return 0
+        ;;
+        -v|--version)
+            echo "v1.0.0"
             return 0
         ;;
         install)
@@ -44,16 +48,24 @@ function appsMain
             appsUpgrade "$@"
             return $?
         ;;
+        remove)
+            shift
+            Command="$Command remove"
+            appsRemove "$@"
+            return $?
+        ;;
         *)
-            if [[ "$1" == -* ]];then
+            if [[ "$1" == "" ]];then
+                mainHelp
+            elif [[ "$1" == -* ]];then
                 echo Error: unknown flag "'$1'" for "$Command"
                 echo "Run '$Command --help' for usage."
             else
                 echo Error: unknown command "'$1'" for "$Command"
                 echo "Run '$Command --help' for usage."
             fi        
-        exit 1
-    ;;
+            return 1
+        ;;
     esac
     mainHelp
     return 1
