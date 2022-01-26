@@ -39,7 +39,7 @@ do
 done
 
 Input="$Dir/src"
-Output="$Dir/dist"
+Output="$Dir/bin"
 function build_merge
 {
     local dir="$1"

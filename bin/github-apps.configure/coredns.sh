@@ -3,6 +3,7 @@ selfOS=""
 # Callback before install or upgrade or remove
 #
 # Usually here it is checked whether the platform is supported and a platform dependent variable can be set
+#  * FlagPlatformError
 #  * FlagInstallDir
 function AppsPlatform
 {
@@ -16,14 +17,15 @@ function AppsPlatform
     elif [[ "$platform" =~ Linux ]];then 
         os="linux"
     else
-        echo "Not Supported: coredns on $platform $arch"
-        return 1 # not support
+        # not support
+        FlagPlatformError="Not Supported: coredns on $platform $arch"
+        return 
     fi
     if [[ "$arch" == "x86_64" ]];then
         arch=amd64
     else
-        echo "Not Supported: coredns on $platform $arch"
-        return 1
+        FlagPlatformError="Not Supported: coredns on $platform $arch"
+        return
     fi
 
     selfName="${os}_${arch}"
@@ -31,7 +33,6 @@ function AppsPlatform
     
     # set install dir
     FlagInstallDir="/opt/coredns"
-    return 0
 }
 # Callback before install or upgrade, after AppsPlatform
 #
@@ -64,6 +65,27 @@ function AppsSetFile
         FlagDownloadHash=$url
     fi
 }
+function AppsVersion
+{
+    # local app="$1"
+    local version="$2"
+    if [[ "$version" == "" ]];then
+        local exe="$FlagInstallDir/coredns"
+        echo "$exe"
+        if [[ -f "$exe" ]];then
+            local str=$("$exe" -version )
+            for str in $str
+            do
+                break
+            done
+            str=v${str#CoreDNS-}
+            AppsVersionValue=$str
+        fi
+    else
+        echo write version "'$version'"
+    fi
+}
+
 # Unzip the package to the installation path
 # 
 # The FlagTest flag should be evaluated to determine whether to actually operate

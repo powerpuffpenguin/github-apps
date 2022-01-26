@@ -15,7 +15,7 @@ function upgradeHelp
     echo "  -h, --help          help for $Command"
 }
 
-function appsUpgradeOne
+function appsUpgradePush
 {
     CallbackClear
     FlagsPush
@@ -33,14 +33,28 @@ function appsUpgradeOne
     fi
     source "$Configure/$app.sh"
 
-    AppsPlatform
-    if [[ "$FlagInstallDir" == "" ]];then
-        echo "FlagInstallDir not set"
-        return 1
+    appsUpgradePushFlags="$flags"
+}
+
+function appsUpgradeOne
+{
+    local app="$1"
+    if [[ "$2" != 1 ]];then
+        appsUpgradePush "$app"
+    
+        AppsPlatform
+        if [[ "$FlagPlatformError" != "" ]];then
+            echo "$FlagPlatformError"
+            return 1
+        elif [[ "$FlagInstallDir" == "" ]];then
+            echo "FlagInstallDir not set"
+            return 1
+        fi
     fi
+
     echo "Upgrade '$app' on '$FlagInstallDir'"
-    if [[ "$flags" != "" ]];then
-        echo "$flags"
+    if [[ "$appsUpgradePushFlags" != "" ]];then
+        echo "$appsUpgradePushFlags"
     fi
 
     AppsSetUrl
@@ -54,9 +68,19 @@ function appsUpgradeAll
     local app
     for app in $Apps
     do
-        appVersionGet "$app"
-        if [[ "$appVersionGetValue" != "" ]];then
-            appsUpgradeOne "$app"
+        appsUpgradePush
+
+        AppsPlatform
+        if [[ "$FlagPlatformError" != "" || "$FlagInstallDir" == "" ]];then
+            FlagsPop
+            continue
+        fi
+
+        AppsVersion "$app"
+        if [[ "$AppsVersionValue" == "" ]];then
+            FlagsPop
+        else
+            appsUpgradeOne "$app" 1
         fi
     done
 }

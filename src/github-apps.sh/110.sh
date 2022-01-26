@@ -34,7 +34,10 @@ function appsInstallOne
     source "$Configure/$app.sh"
 
     AppsPlatform
-    if [[ "$FlagInstallDir" == "" ]];then
+    if [[ "$FlagPlatformError" != "" ]];then
+        echo "$FlagPlatformError"
+        return 1
+    elif [[ "$FlagInstallDir" == "" ]];then
         echo "FlagInstallDir not set"
         return 1
     fi

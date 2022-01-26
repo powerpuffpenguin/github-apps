@@ -1,13 +1,13 @@
 function installExecute
 {
     local app="$1"
-    RequestVersion
+    AppsRequestVersion
 
     local success="Successfully installed '$app' to '$FlagInstallDir'. $FlagVersion"
 
-    local versionFile="$FlagInstallDir/apps.version"
-    if [[ -f "$versionFile" ]];then
-        local current=$(cat "$versionFile")
+    AppsVersion
+    if [[ "$AppsVersionValue" != "" ]];then
+        local current=$AppsVersionValue
         VersionCurreant "${current}"
         if [[ "$VersionCurreantOk" == 0 ]];then
             echo parse current version error
@@ -115,10 +115,9 @@ function installExecute
     # AppsUnpack
     AppsUnpack "$file"
 
-    echo "write version '$FlagVersion' to '$versionFile'"
-    if [[ "$FlagTest" == 0 ]];then
-        echo "$FlagVersion" > "$versionFile"
-    fi
+    # Wriete version
+    AppsVersion "$app" "$FlagVersion"
+
     echo rm "$file"
     rm "$file"
     echo "$success"

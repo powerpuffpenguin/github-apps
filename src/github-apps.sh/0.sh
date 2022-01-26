@@ -9,6 +9,9 @@ DevFile="http://192.168.251.50/tools/dev/coredns_1.8.7_linux_amd64.tgz"
 
 function FlagsClear
 {
+    # if platform not supported, set error in this
+    FlagPlatformError=""
+
     # if not 0 only test commands don't actually change apps
     FlagTest=0
     # app install dir
@@ -38,9 +41,9 @@ Command=$(basename $BASH_SOURCE)
 # Root dir
 Root=$(cd $(dirname $BASH_SOURCE) && pwd)
 # Configure dir
-Configure="$Root/apps.configure"
+Configure="$Root/github-apps.configure"
 # Cache dir
-Cache="$Root/apps.cache"
+Cache="$Root/github-apps.cache"
 
 # apps
 if [[ ! -d "$Configure" ]];then
@@ -68,6 +71,8 @@ fi
 FlagsClear
 function FlagsPush
 {
+    __FlagPlatformError=$FlagPlatformError
+
     __FlagTest=$FlagTest
     __FlagInstallDir=$FlagInstallDir
     __FlagVersion=$FlagVersion
@@ -83,6 +88,8 @@ function FlagsPush
 }
 function FlagsPop
 {
+    FlagPlatformError=__$FlagPlatformError
+    
     FlagTest=$__FlagTest
     FlagInstallDir=$__FlagInstallDir
     FlagVersion=$__FlagVersion

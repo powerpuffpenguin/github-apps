@@ -12,8 +12,22 @@ function listHelp
 }
 function appListOne
 {
-    appVersionGet "$1"
-    echo "$1 $appVersionGetValue"
+    CallbackClear
+    FlagsPush
+
+    local app="$1"
+    local flag="$2"
+    source "$Configure/$app.sh"
+    AppsPlatform
+    if [[ "$FlagPlatformError" == "" ]];then
+        AppsVersion "$app"
+        if [[ "$flag" == 1 ]];then
+            echo "$app $AppsVersionValue"
+        else
+            echo "$app"
+        fi
+    fi
+    FlagsPop
 }
 function appsList
 {
@@ -47,9 +61,13 @@ function appsList
         local app
         for app in $Apps
         do
-            appListOne "$app"
+            appListOne "$app" 1
         done
     else
-        echo $Apps
+        local app
+        for app in $Apps
+        do
+            appListOne "$app"
+        done
     fi
 }

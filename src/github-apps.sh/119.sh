@@ -15,7 +15,7 @@ function upgradeExecute
     fi
     # request remote version
     local target=$FlagVersion
-    RequestVersion
+    AppsRequestVersion
     VersionCompare
     case $VersionCompareValue in
         0)
@@ -32,7 +32,7 @@ function upgradeExecute
                 FlagVersion=""
                 FlagDownloadFile=""
                 FlagDownloadHash=""
-                RequestVersionList
+                AppsRequestVersionList
             else
                 echo "target version not matched: $current -> $target"
                 return 1
@@ -87,10 +87,9 @@ function upgradeExecute
     # AppsUnpack
     AppsUnpack "$file"
 
-    echo "write version '$FlagVersion' to '$versionFile'"
-    if [[ "$FlagTest" == 0 ]];then
-        echo "$FlagVersion" > "$versionFile"
-    fi
+    # Wriete version
+    AppsVersion "$app" "$FlagVersion"
+    
     echo rm "$file"
     rm "$file"
     echo "Successfully upgraded '$app' to '$FlagInstallDir'. $current -> $FlagVersion"

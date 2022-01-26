@@ -1,34 +1,26 @@
 ######    version   ######
-appVersionGetValue=""
+function appVersionSet
+{
+    local app="$1"
+    local version="$2"
+    local versionFile="$FlagInstallDir/apps.version"
+    echo "write version '$version' to '$versionFile'"
+    if [[ "$FlagTest" == 0 ]];then
+        echo "$FlagVersion" > "$versionFile"
+    fi
+}
 function appVersionGet
 {
-    appVersionGetValue=""
-    local app="$1"
-    CallbackClear
-    FlagsPush
-
-    set +e
-    local v
-    source "$Configure/$app.sh"
-    v=$(AppsPlatform)
-    if [[ $? == 0 ]];then
-        AppsPlatform
-    fi
     if [[ "$FlagInstallDir" != "" ]];then
         local versionFile="$FlagInstallDir/apps.version"
         if [[ -f "$versionFile" ]];then
-            appVersionGetValue=$(cat "$versionFile")
-            appVersionParse "$appVersionGetValue"
-            if [[ $appVersionOk == 0 ]];then
-                appVersionGetValue=""
+            local val=$(cat "$versionFile")
+            appVersionParse "$val"
+            if [[ $appVersionOk == 1 ]];then
+                AppsVersionValue=$val
             fi
-            set -e
-            FlagsPop
-            return 
         fi
     fi
-    set -e
-    FlagsPop
 }
 function appVersionParse
 {
