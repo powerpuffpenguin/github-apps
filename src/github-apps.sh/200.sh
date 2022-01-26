@@ -8,6 +8,7 @@ function mainHelp
     echo "  $Command [command]"
     echo
     echo "Available Commands:"
+    echo "  completion        generate the autocompletion script for bash"
     echo "  list              list apps"
     echo "  install           install apps"
     echo "  upgrade           upgrade apps"
@@ -30,16 +31,22 @@ function appsMain
             echo "v1.0.0"
             return 0
         ;;
-        install)
+        completion)
             shift
-            Command="$Command install"
-            appsInstall "$@"
+            Command="$Command completion"
+            appsCompletion "$@"
             return $?
         ;;
         list)
             shift
             Command="$Command list"
             appsList "$@"
+            return $?
+        ;;
+        install)
+            shift
+            Command="$Command install"
+            appsInstall "$@"
             return $?
         ;;
         upgrade)

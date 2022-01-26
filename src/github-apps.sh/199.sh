@@ -1,12 +1,13 @@
 ######    list   ######
 function listHelp
 {
-    echo "list apps"
+    echo "List apps"
     echo
     echo "Usage:"
     echo "  $Command [flags]"
     echo
     echo "Flags:"
+    echo "  -i, --install       only list installed apps"
     echo "  -v, --version       list apps installed version"
     echo "  -h, --help          help for $Command"
 }
@@ -14,14 +15,17 @@ function appListOne
 {
     CallbackClear
     FlagsPush
-
     local app="$1"
     local flag="$2"
+    local install="$3"
     source "$Configure/$app.sh"
     AppsPlatform
     if [[ "$FlagPlatformError" == "" ]];then
         AppsVersion "$app"
-        if [[ "$flag" == 1 ]];then
+        if [[ "$install" == 1 && "$AppsVersionValue" == "" ]];then
+            FlagsPop
+            return
+        elif [[ "$flag" == 1 ]];then
             echo "$app $AppsVersionValue"
         else
             echo "$app"
@@ -32,7 +36,9 @@ function appListOne
 function appsList
 {
     local version=0
-    local ARGS=`getopt -o hv --long help,version -n "$Command" -- "$@"`
+    local install=0
+    local ARGS
+    ARGS=`getopt -o hiv --long help,install,version -n "$Command" -- "$@"`
     eval set -- "${ARGS}"
     while true
     do
@@ -40,6 +46,10 @@ function appsList
         -h|--help)
             listHelp
             return 0
+        ;;
+        -i|--install)
+            install=1
+            shift
         ;;
         -v|--version)
             version=1
@@ -61,13 +71,13 @@ function appsList
         local app
         for app in $Apps
         do
-            appListOne "$app" 1
+            appListOne "$app" 1 $install
         done
     else
         local app
         for app in $Apps
         do
-            appListOne "$app"
+            appListOne "$app" 0 $install
         done
     fi
 }

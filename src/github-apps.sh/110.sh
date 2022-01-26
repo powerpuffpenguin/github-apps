@@ -1,15 +1,15 @@
 ######    install   ######
 function installHelp
 {
-    echo "install apps"
+    echo "Install apps"
     echo
     echo "Example:"
     echo "  # install coredns"
-    echo "  $Command coredns"
-    echo "  $Command coredns -v v1.8.7"
+    echo "  $ $Command coredns"
+    echo "  $ $Command coredns -v v1.8.7"
     echo
     echo "  # install multiple apps"
-    echo "  $Command coredns ariang"
+    echo "  $ $Command coredns ariang"
     echo
     echo "Usage:"
     echo "  $Command [flags]"
@@ -63,7 +63,8 @@ function appsInstall
 {
     FlagsClear
 
-    local ARGS=`getopt -o htv:yn --long help,test,version:,yes,no,no-sum -n "$Command" -- "$@"`
+    local ARGS
+    ARGS=`getopt -o htv:yn --long help,test,version:,yes,no,no-sum -n "$Command" -- "$@"`
     eval set -- "${ARGS}"
     while true
     do

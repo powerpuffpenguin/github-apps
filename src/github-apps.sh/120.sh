@@ -1,18 +1,18 @@
 ######    upgrade   ######
 function upgradeHelp
 {
-    echo "upgrade apps"
+    echo "Upgrade apps"
     echo
     echo "Example:"
     echo "  # upgrade coredns"
-    echo "  $Command coredns"
-    echo "  $Command coredns -v v1.8.7"
+    echo "  $ $Command coredns"
+    echo "  $ $Command coredns -v v1.8.7"
     echo
     echo "  # upgrade multiple apps"
-    echo "  $Command coredns ariang"
+    echo "  $ $Command coredns ariang"
     echo
     echo "  # upgrade all installed apps"
-    echo "  $Command"
+    echo "  $ $Command"
     echo
     echo "Usage:"
     echo "  $Command [flags]"
@@ -99,7 +99,8 @@ function appsUpgrade
 {
     FlagsClear
 
-    local ARGS=`getopt -o htv:yn --long help,test,version:,yes,no,no-sum -n "$Command" -- "$@"`
+    local ARGS
+    ARGS=`getopt -o htv:yn --long help,test,version:,yes,no,no-sum -n "$Command" -- "$@"`
     eval set -- "${ARGS}"
     while true
     do

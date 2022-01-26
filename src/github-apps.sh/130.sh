@@ -1,14 +1,14 @@
 ######    remove   ######
 function removeHelp
 {
-    echo "remove apps"
+    echo "Remove apps"
     echo
     echo "Example:"
     echo "  # remove coredns"
-    echo "  $Command coredns"
+    echo "  $ $Command coredns"
     echo
     echo "  # remove multiple apps"
-    echo "  $Command coredns ariang"
+    echo "  $ $Command coredns ariang"
     echo
     echo "Usage:"
     echo "  $Command [flags]"
@@ -60,7 +60,8 @@ function appsRemove
 {
     FlagsClear
 
-    local ARGS=`getopt -o htacd --long help,test,all,conf,data -n "$Command" -- "$@"`
+    local ARGS
+    ARGS=`getopt -o htacd --long help,test,all,conf,data -n "$Command" -- "$@"`
     eval set -- "${ARGS}"
     while true
     do
