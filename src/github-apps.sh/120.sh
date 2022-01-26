@@ -18,7 +18,7 @@ function upgradeHelp
     echo "  $Command [flags]"
     echo
     echo "Flags:"
-    echo "  -t, --test          test install but won't actually install to hard disk"
+    echo "  -t, --test          test upgrade but won't actually upgrade to hard disk"
     echo "  -v, --version       upgrade version tag, only supported on upgrade one app"
     echo "  -y, --yes           automatic yes to prompts"
     echo "  -n, --no            automatic no to prompts"

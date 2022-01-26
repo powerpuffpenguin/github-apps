@@ -54,6 +54,12 @@ function appsMain
             appsRemove "$@"
             return $?
         ;;
+        cache)
+            shift
+            Command="$Command cache"
+            appsCache "$@"
+            return $?
+        ;;
         *)
             if [[ "$1" == "" ]];then
                 mainHelp
