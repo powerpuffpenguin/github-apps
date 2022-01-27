@@ -55,14 +55,17 @@ function appsCache
         echo du -sh "$Cache"
         du -sh "$Cache"
     else
-        find "$Cache" -maxdepth 1 -type f| {
+        find "$Cache" -maxdepth 1| {
             clean=0
             while read file
             do
+                if [[ "$file" == "$Cache" ]];then
+                    continue
+                fi
                 clean=1
-                echo rm "$file"
+                echo rm "$file" -rf
                 if [[ "$FlagTest" == 0 ]];then
-                    rm "$file"
+                    rm "$file" -rf
                 fi
             done
             if [[ $clean == 0 ]];then

@@ -1,1 +1,1 @@
-Apps_Version="v1.0.0"
+Apps_Version="v1.0.1"
