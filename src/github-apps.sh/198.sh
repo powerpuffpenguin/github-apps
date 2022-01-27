@@ -131,7 +131,7 @@ __powerpuffpenguin_github_apps()
 {
     local cur=${COMP_WORDS[COMP_CWORD]}
     if [ 1 == $COMP_CWORD ];then
-        local opts="-h --help -v --version \
+        local opts="-h --help -v --version -m --metadata \
             completion list cache self \
             install upgrade remove "
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )

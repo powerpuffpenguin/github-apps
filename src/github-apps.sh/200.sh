@@ -27,11 +27,18 @@ function appsMain
     case "$1" in
         -h|--help)
             mainHelp
-            return 0
+            return
         ;;
         -v|--version)
             echo "$Apps_Version"
-            return 0
+            return
+        ;;
+        -m|--metadata)
+            echo "version: $Apps_Version"
+            echo "install: $Root"
+            echo "   conf: $Configure"
+            echo "  cache: $Cache"
+            return
         ;;
         completion)
             shift
