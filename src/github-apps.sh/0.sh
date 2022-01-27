@@ -51,9 +51,18 @@ else
     Command=$(basename $BASH_SOURCE)
 fi
 # Configure dir
-Configure="$Root/github-apps.configure"
+if [[ "$GithubAppsConfigure" != ""  ]];then
+    Configure="$GithubAppsConfigure"
+else
+    Configure="$Root/github-apps.configure"
+fi
+
 # Cache dir
-Cache="$Root/github-apps.cache"
+if [[ "$GithubAppsCache" != ""  ]];then
+    Cache="$GithubAppsCache"
+else
+    Cache="$Root/github-apps.cache"
+fi
 
 # apps
 if [[ ! -d "$Configure" ]];then
