@@ -52,27 +52,9 @@ Configure="$Root/github-apps.configure"
 # Cache dir
 Cache="$Root/github-apps.cache"
 
-# apps
-if [[ ! -d "$Configure" ]];then
-    mkdir "$Configure"
-fi
-Apps=$(find "$Configure" -maxdepth 1 -name "*.sh" -type f | {
-    while read file
-    do
-        name=$(basename "$file")
-        for str in $name
-        do
-            if [[ "$str" == "$name" ]];then
-                name=${name%.sh}
-                echo "$name "
-            fi
-            break
-        done
-    done
-})
+
 if [[ ! -d "$Cache" ]];then
     mkdir "$Cache"
-    chmod 777 "$Cache" 
 fi
 
 FlagsClear
@@ -118,45 +100,12 @@ function FlagsPop
 }
 ######    src/github-apps.sh/1.sh   ######
 ######    callback   ######
-function CallbackClear
-{
-    eval 'function AppsPlatform
-{
-    FlagPlatformError="function AppsPlatform not implemented"
-}
-function AppsSetUrl
-{
-    echo function SetUrl not implemented
-    return 1
-}
-function AppsSetFile
-{
-    echo function AppsSetFile not implemented
-    return 1
-}
-function AppsUnpack
-{
-    echo function AppsUnpack not implemented
-    return 1
-}
-function AppsRemove
-{
-    echo function AppsRemove not implemented
-    return 1
-}
+
 function AppsHash
 {
     sha256sum "$1"
 }
-function AppsVersion
-{
-    if [[ "$2" == "" ]];then
-        AppsVersionValue=""
-        appVersionGet "$1"
-    else
-        appVersionSet "$1" "$2"
-    fi
-}
+
 # set download url
 # FlagVersion
 # FlagDownloadFile
@@ -173,21 +122,15 @@ function AppsRequestVersionList
 {
     RequestVersionList
 }
-'
-}
 
 ######    src/github-apps.sh/2.sh   ######
 Apps_Version="v1.0.1"
 
 ######    src/github-apps.sh/3.sh   ######
 ######    callback   ######
-function CallbackSelf
+function AppsPlatform
 {
-    eval 'function AppsPlatform
-{
-    if [[ "$GithubAppsSelf" == 1 ]];then
-        FlagInstallDir="$Root"
-    elif [[ "$InstallDir" == "" ]];then
+   if [[ "$InstallDir" == "" ]];then
         FlagInstallDir="/usr/bin"
     else
         FlagInstallDir="$InstallDir"
@@ -218,10 +161,6 @@ function AppsVersion
     # local app="$1"
     local version="$2"
     if [[ "$version" == "" ]];then
-        if [[ "$GithubAppsSelf" == 1 ]];then
-            AppsVersionValue="$Apps_Version"
-            return
-        fi
         local exe="$FlagInstallDir/github-apps.sh"
         if [[ -f "$exe" ]];then
             local str=$("$exe" -v )
@@ -295,41 +234,11 @@ function AppsUnpack
     echo rm "$tmp" -rf
     rm "$tmp" -rf
 }
-function AppsRemove
-{
-    local dir=$FlagInstallDir
-    local file="$dir/github-apps.sh"
-    if [[ -f "$file" ]];then
-        echo rm "$file"
-        if [[ "$FlagTest" == 0 ]];then
-            rm "$file"
-        fi
-    fi
-    local cache="$Cache"
-    if [[ -d "$cache" ]];then
-        echo rm "$cache" -rf
-        if [[ "$FlagTest" == 0 ]];then
-            rm "$cache" -rf
-        fi
-    fi
-
-    if [[ "$FlagDeleteConf" != 0 ]];then
-        local conf="$Configure"
-        if [[ -d "$conf" ]];then
-            echo rm "$conf" -rf
-            if [[ "$FlagTest" == 0 ]];then
-                rm "$conf" -rf
-            fi
-        fi
-    fi
-}
-'
-}
 ######    src/github-apps.sh/9.sh   ######
 ######    input   ######
 function InputPrompts
 {
-    local cmd
+    InputPromptsOk=0
     while read -p "$1 (y/n): " cmd
     do
         if [[ "$cmd" == "n" ]];then
@@ -916,7 +825,6 @@ function installExecute
 ######    install   ######
 function appsInstallOne
 {
-    CallbackClear
     FlagsPush
 
     local app="$1"
@@ -930,12 +838,6 @@ function appsInstallOne
     if [[ $FlagTest != 0 ]];then
         flags="${flags}test "
     fi
-   
-   if [[ "$GithubAppsSourceSelf" == 1 ]];then
-        CallbackSelf
-   else
-       source "$Configure/$app.sh"
-   fi
 
     AppsPlatform
     if [[ "$FlagPlatformError" != "" ]];then
@@ -976,11 +878,10 @@ function appsSelfHelp
 function appsSelf
 {
     FlagsClear
-    GithubAppsSourceSelf=1
 
     InstallDir="/usr/bin"
     local ARGS
-    ARGS=`getopt -o htv:yn --long help,test,version:i:,yes,no,skip-checksum,install -n "$Command" -- "$@"`
+    ARGS=`getopt -o htv:i:yn --long help,test,version:i:,yes,no,skip-checksum,install -n "$Command" -- "$@"`
     eval set -- "${ARGS}"
     while true
     do
@@ -1030,6 +931,4 @@ function appsSelf
         rm "$Cache" -rf
     fi
 }
-GithubAppsSourceSelf=0
 appsSelf "$@"
-

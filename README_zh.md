@@ -47,9 +47,20 @@ github 上存在大量有用且有趣的開源項目，然而使用它們的一�
 
 本腳本使用 curl 下載安裝包以及請求 github api，請參考 [curl](https://curl.se/download.html) 官網進行安裝。
 
+
+要安裝到默認路徑(/usr/bin)請以 root 權限執行如下指令
+
 ```
-curl -s  http://192.168.251.50/tools/dev/install.sh | bash -s
+curl -s  https://raw.githubusercontent.com/powerpuffpenguin/github-apps/main/install.sh | bash -s -- -n
 ```
+
+
+要安裝到其它路徑可以說用 -i 或 -install 參數指定安裝路徑
+
+```
+curl -s  https://raw.githubusercontent.com/powerpuffpenguin/github-apps/main/install.sh | bash -s -- -n -i ~/bin
+```
+
 # 如何使用
 
 所有的命令和子命令都可以傳入 `-h` 查看使用說明，本腳本支持如下幾個子命令：
