@@ -23,8 +23,8 @@ function mainHelp
 GithubAppsSourceSelf=0
 function appsMain
 {
-    # InstallDir=""
-    # GithubAppsSelf=1
+    InstallDir=""
+    GithubAppsSelf=1
     case "$1" in
         -h|--help)
             mainHelp
