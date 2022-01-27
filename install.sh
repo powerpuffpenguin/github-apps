@@ -39,12 +39,13 @@ function FlagsClear
     FlagUrlTag=""
 }
 # Command
-Command=$(basename $BASH_SOURCE)
 # Root dir
 if [[ "$BASH_SOURCE" == "" ]];then
     Root=$(pwd)
+    Command="install.sh"
 else
     Root=$(cd $(dirname $BASH_SOURCE) && pwd)
+    Command=$(basename $BASH_SOURCE)
 fi
 # Configure dir
 Configure="$Root/github-apps.configure"
@@ -1029,7 +1030,6 @@ function appsSelf
         rm "$Cache" -rf
     fi
 }
-Command="install.sh"
 GithubAppsSourceSelf=0
 appsSelf "$@"
 
