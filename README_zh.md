@@ -54,8 +54,10 @@ github 上存在大量有用且有趣的開源項目，然而使用它們的一�
 curl -s  https://raw.githubusercontent.com/powerpuffpenguin/github-apps/main/install.sh | bash -s -- -n
 ```
 
+> 如果已經安裝過會自動退出安裝，要重新安裝可以使用 -y 參數
 
-要安裝到其它路徑可以說用 -i 或 -install 參數指定安裝路徑
+
+要安裝到其它路徑可以使用 -i 或 -install 參數指定安裝路徑
 
 ```
 curl -s  https://raw.githubusercontent.com/powerpuffpenguin/github-apps/main/install.sh | bash -s -- -n -i ~/bin
@@ -71,6 +73,7 @@ curl -s  https://raw.githubusercontent.com/powerpuffpenguin/github-apps/main/ins
 * [upgrade](#upgrade)
 * [remove](#remove)
 * [cache](#cache)
+* [self](#self)
 
 **注意** 大部分指令都可以接受一個 `-t` 的 test 參數，使用此參數會執行所有工作但不會真實的更改應用安裝情況，你可以使用它來跟蹤打印信息以便在操作前可以確認下會如何修改系統檔案
 
@@ -204,6 +207,30 @@ github-app.sh cache
 下面指令清空緩存
 ```
 github-app.sh cache -d
+```
+
+## self
+
+self 指令用於對 github-apps.sh 腳本本身進行管理，輸入 `-h` 參數可查看詳細說明：
+```
+github-apps.sh self -h
+```
+
+更新 github-apps.sh:
+```
+github-apps.sh self -u
+```
+
+重新安裝 github-apps.sh:
+```
+github-apps.sh self -i
+github-apps.sh self -i -v v1.1.0
+```
+
+刪除 github-apps.sh:
+```
+github-apps.sh self -r
+github-apps.sh self -r -a
 ```
 
 # 版本號

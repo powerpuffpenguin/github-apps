@@ -47,7 +47,20 @@ Of course, using bash also produces some problems such as:
 
 This script uses curl to download the installation package and request the github api. Please refer to the [curl](https://curl.se/download.html) official website for installation.
 
-Now you can [download the compressed package](https://github.com/powerpuffpenguin/github-apps/releases) and unzip it to the /usr/bin path to use it. After I finish writing the instructions, I will write an installation script. You can enter the command to install automatically
+To install to the default path (/usr/bin), execute the following command with root privileges:
+
+```
+curl -s  https://raw.githubusercontent.com/powerpuffpenguin/github-apps/main/install.sh | bash -s -- -n
+```
+
+> If it has already been installed, it will automatically exit the installation. To reinstall, you can use the -y parameter
+
+To install to another path, you can use the -i or -install parameter to specify the installation path:
+
+```
+curl -s  https://raw.githubusercontent.com/powerpuffpenguin/github-apps/main/install.sh | bash -s -- -n -i ~/bin
+```
+
 
 # how
 
@@ -59,6 +72,7 @@ All commands and subcommands can be passed in `-h` to view the usage instruction
 * [upgrade](#upgrade)
 * [remove](#remove)
 * [cache](#cache)
+* [self](#self)
 
 **Care** Most commands accept a `-t` test parameter. Use this parameter to test the workflow, it doesn't change the app just prints the changed flow. You can use it to keep track of printing information so that you can confirm how the system files will be modified before proceeding.
 
@@ -192,6 +206,30 @@ github-app.sh cache
 The following command clears the cache:
 ```
 github-app.sh cache -d
+```
+
+## self
+
+The self command is used to manage the github-apps.sh script itself. Enter the `-h` parameter to view detailed instructions:
+```
+github-apps.sh self -h
+```
+
+upgrade github-apps.sh:
+```
+github-apps.sh self -u
+```
+
+reinstall github-apps.sh:
+```
+github-apps.sh self -i
+github-apps.sh self -i -v v1.1.0
+```
+
+remove github-apps.sh:
+```
+github-apps.sh self -r
+github-apps.sh self -r -a
 ```
 
 # version
