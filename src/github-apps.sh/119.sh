@@ -2,12 +2,12 @@ function upgradeExecute
 {
     local app="$1"
     # load current version
-    local versionFile="$FlagInstallDir/apps.version"
-    if [[ ! -f "$versionFile" ]];then
-        echo "version file not exists: $versionFile"
+    AppsVersion "$app"
+    if [[ "$AppsVersionValue" == "" ]];then
+        echo "get version error"
         return 1
     fi
-    local current=$(cat "$versionFile")
+    local current="$AppsVersionValue"
     VersionCurreant "${current}"
     if [[ "$VersionCurreantOk" == 0 ]];then
         echo parse current version error

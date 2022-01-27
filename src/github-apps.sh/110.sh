@@ -19,7 +19,7 @@ function installHelp
     echo "  -v, --version       install version tag, only supported on install one app"
     echo "  -y, --yes           automatic yes to prompts"
     echo "  -n, --no            automatic no to prompts"
-    echo "      --no-sum        don't validate archive hash"
+    echo "      --skip-checksum        don't validate archive hash"
     echo "  -h, --help          help for $Command"
 }
 function appsInstallOne
@@ -33,13 +33,17 @@ function appsInstallOne
         flags="$FlagVersion "
     fi
     if [[ $FlagSum == 0 ]];then
-        flags="${flags}no-sum "
+        flags="${flags}skip-checksum "
     fi
     if [[ $FlagTest != 0 ]];then
         flags="${flags}test "
     fi
    
-    source "$Configure/$app.sh"
+   if [[ "$GithubAppsSourceSelf" == 1 ]];then
+        CallbackSelf
+   else
+       source "$Configure/$app.sh"
+   fi
 
     AppsPlatform
     if [[ "$FlagPlatformError" != "" ]];then
@@ -64,7 +68,7 @@ function appsInstall
     FlagsClear
 
     local ARGS
-    ARGS=`getopt -o htv:yn --long help,test,version:,yes,no,no-sum -n "$Command" -- "$@"`
+    ARGS=`getopt -o htv:yn --long help,test,version:,yes,no,skip-checksum -n "$Command" -- "$@"`
     eval set -- "${ARGS}"
     while true
     do
@@ -89,7 +93,7 @@ function appsInstall
             FlagNo=1
             shift
         ;;
-        --no-sum)
+        --skip-checksum)
             FlagSum=0
             shift
         ;;

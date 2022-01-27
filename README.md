@@ -268,7 +268,7 @@ At the same time, if you find the checksum file, you can set its download URL to
 
 AppsHash is optional.
 
-If FlagDownloadHash is set and the user does not use the **--no-sum** parameter, AppsHash will be called to calculate the checksum. The first parameter of AppsHash is the path of the downloaded installation package. You need to calculate the checksum in it and output it. github-apps.sh will use the output value as the checksum.
+If FlagDownloadHash is set and the user does not use the **--skip-checksum** parameter, AppsHash will be called to calculate the checksum. The first parameter of AppsHash is the path of the downloaded installation package. You need to calculate the checksum in it and output it. github-apps.sh will use the output value as the checksum.
 
 The default implementation of AppsHash is to call `sha256sum "$1"` directly.
 

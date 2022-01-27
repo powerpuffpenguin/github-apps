@@ -15,12 +15,28 @@ __powerpuffpenguin_github_apps_cache()
         -t --test -d --delete"
     COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
 }
+__powerpuffpenguin_github_apps_self()
+{
+    local opts="-h --help \
+        -t --test -v --version -y --yes -n --no --skip-checksum \
+        -i --install -u --upgrade -r --remove \
+        -a --all -c --conf -d --data"
+    local previous=${COMP_WORDS[COMP_CWORD-1]}
+    case $previous in
+        -v|--version)
+            COMPREPLY=()
+        ;;
+        *)
+            COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+        ;;
+    esac
+}
 __powerpuffpenguin_github_apps_install()
 {
     local apps=`github-apps.sh list 2> /dev/null`
     local opts="-h --help \
         -t --test -v --version -y --yes -n --no \
-        --no-sum $apps"
+        --skip-checksum $apps"
     local previous=${COMP_WORDS[COMP_CWORD-1]}
     case $previous in
         -v|--version)
@@ -36,7 +52,7 @@ __powerpuffpenguin_github_apps_upgrade()
     local apps=`github-apps.sh list -i 2> /dev/null`
     local opts="-h --help \
         -t --test -v --version -y --yes -n --no \
-        --no-sum $apps"
+        --skip-checksum $apps"
     local previous=${COMP_WORDS[COMP_CWORD-1]}
     case $previous in
         -v|--version)
@@ -68,7 +84,7 @@ __powerpuffpenguin_github_apps()
     local cur=${COMP_WORDS[COMP_CWORD]}
     if [ 1 == $COMP_CWORD ];then
         local opts="-h --help -v --version \
-            completion list cache \
+            completion list cache self \
             install upgrade remove "
         COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
     else
@@ -81,6 +97,9 @@ __powerpuffpenguin_github_apps()
             ;;
             cache)
                 __powerpuffpenguin_github_apps_cache
+            ;;
+            self)
+                __powerpuffpenguin_github_apps_self
             ;;
             install)
                 __powerpuffpenguin_github_apps_install
@@ -96,4 +115,3 @@ __powerpuffpenguin_github_apps()
 }
 
 complete -F __powerpuffpenguin_github_apps github-apps.sh
-

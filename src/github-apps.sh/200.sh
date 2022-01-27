@@ -14,14 +14,17 @@ function mainHelp
     echo "  upgrade           upgrade apps"
     echo "  remove            remove apps"
     echo "  cache             cache manage"
+    echo "  self              github-apps.sh self manage"
     echo
     echo "Flags:"
     echo "  -v, --version       show version"
     echo "  -h, --help          help for $Command"
 }
-
+GithubAppsSourceSelf=0
 function appsMain
 {
+    # InstallDir=""
+    # GithubAppsSelf=1
     case "$1" in
         -h|--help)
             mainHelp
@@ -65,6 +68,12 @@ function appsMain
             shift
             Command="$Command cache"
             appsCache "$@"
+            return $?
+        ;;
+        self)
+            shift
+            Command="$Command self"
+            appsSelf "$@"
             return $?
         ;;
         *)

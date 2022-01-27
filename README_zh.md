@@ -268,7 +268,7 @@ github-apps.sh 中定義了幾個全局變量，配置腳本和 github-apps.sh �
 
 AppsHash 是可選實現的
 
-如果 FlagDownloadHash 被設置並且用戶沒有使用 **--no-sum** 參數，則會調用 AppsHash 計算 checksum。AppsHash 第一個參數是下載的安裝包路徑，你需要在裏面計算 checksum 並輸出，github-apps.sh 會使用輸出的值作爲 checksum
+如果 FlagDownloadHash 被設置並且用戶沒有使用 **--skip-checksum** 參數，則會調用 AppsHash 計算 checksum。AppsHash 第一個參數是下載的安裝包路徑，你需要在裏面計算 checksum 並輸出，github-apps.sh 會使用輸出的值作爲 checksum
 
 AppsHash 的默認實現是直接調用 `sha256sum "$1"`
 

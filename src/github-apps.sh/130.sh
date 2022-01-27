@@ -36,8 +36,11 @@ function appRemoveOne
     if [[ $FlagDeleteData != 0 ]];then
         flags="${flags}delete-data "
     fi
-   
-    source "$Configure/$app.sh"
+    if [[ "$GithubAppsSourceSelf" == 1 ]];then
+        CallbackSelf
+    else
+        source "$Configure/$app.sh"
+    fi
    
     AppsPlatform
     if [[ "$FlagPlatformError" != "" ]];then

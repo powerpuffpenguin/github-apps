@@ -5,7 +5,7 @@ function installExecute
 
     local success="Successfully installed '$app' to '$FlagInstallDir'. $FlagVersion"
 
-    AppsVersion
+    AppsVersion "$app"
     if [[ "$AppsVersionValue" != "" ]];then
         local current=$AppsVersionValue
         VersionCurreant "${current}"
