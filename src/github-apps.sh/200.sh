@@ -8,17 +8,18 @@ function mainHelp
     echo "  $Command [command]"
     echo
     echo "Available Commands:"
-    echo "  completion        generate the autocompletion script for bash"
-    echo "  list              list apps"
-    echo "  install           install apps"
-    echo "  upgrade           upgrade apps"
-    echo "  remove            remove apps"
-    echo "  cache             cache manage"
-    echo "  self              github-apps.sh self manage"
+    echo "  completion             generate the autocompletion script for bash"
+    echo "  list                   list apps"
+    echo "  install                install apps"
+    echo "  upgrade                upgrade apps"
+    echo "  remove                 remove apps"
+    echo "  cache                  cache manage"
+    echo "  self                   github-apps.sh self manage"
     echo
     echo "Flags:"
-    echo "  -v, --version       show version"
-    echo "  -h, --help          help for $Command"
+    echo "  -v, --version          show version"
+    echo "  -m, --metadata         show metadata"
+    echo "  -h, --help             help for $Command"
 }
 GithubAppsSourceSelf=0
 function appsMain

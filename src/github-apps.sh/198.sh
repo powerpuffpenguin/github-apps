@@ -18,7 +18,7 @@ function completionHelp
     echo "  $Command [flags]"
     echo
     echo "Flags:"
-    echo "  -h, --help          help for $Command"
+    echo "  -h, --help             help for $Command"
 }
 function appsCompletion
 {

@@ -7,9 +7,9 @@ function listHelp
     echo "  $Command [flags]"
     echo
     echo "Flags:"
-    echo "  -i, --install       only list installed apps"
-    echo "  -v, --version       list apps installed version"
-    echo "  -h, --help          help for $Command"
+    echo "  -i, --install          only list installed apps"
+    echo "  -v, --version          list apps installed version"
+    echo "  -h, --help             help for $Command"
 }
 function appListOne
 {

@@ -14,11 +14,11 @@ function removeHelp
     echo "  $Command [flags]"
     echo
     echo "Flags:"
-    echo "  -t, --test          test remove but won't actually remove from hard disk"
-    echo "  -a, --all           delete the application, also delete the configuration file and data file"
-    echo "  -c, --conf          delete the application, also delete the configuration file"
-    echo "  -d, --data          delete the application, also delete the data file"
-    echo "  -h, --help          help for $Command"
+    echo "  -t, --test             test remove but won't actually remove from hard disk"
+    echo "  -a, --all              delete the application, also delete the configuration file and data file"
+    echo "  -c, --conf             delete the application, also delete the configuration file"
+    echo "  -d, --data             delete the application, also delete the data file"
+    echo "  -h, --help             help for $Command"
 }
 function appRemoveOne
 {

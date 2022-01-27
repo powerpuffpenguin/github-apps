@@ -14,9 +14,9 @@ function cacheHelp
     echo "  $Command [flags]"
     echo
     echo "Flags:"
-    echo "  -t, --test          test delete cache but won't actually delete from hard disk"
-    echo "  -d, --delete        delete cache"
-    echo "  -h, --help          help for $Command"
+    echo "  -t, --test             test delete cache but won't actually delete from hard disk"
+    echo "  -d, --delete           delete cache"
+    echo "  -h, --help             help for $Command"
 }
 function appsCache
 {

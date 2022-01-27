@@ -15,12 +15,12 @@ function installHelp
     echo "  $Command [flags]"
     echo
     echo "Flags:"
-    echo "  -t, --test          test install but won't actually install to hard disk"
-    echo "  -v, --version       install version tag, only supported on install one app"
-    echo "  -y, --yes           automatic yes to prompts"
-    echo "  -n, --no            automatic no to prompts"
-    echo "      --skip-checksum        don't validate archive hash"
-    echo "  -h, --help          help for $Command"
+    echo "  -t, --test             test install but won't actually install to hard disk"
+    echo "  -v, --version          install version tag, only supported on install one app"
+    echo "  -y, --yes              automatic yes to prompts"
+    echo "  -n, --no               automatic no to prompts"
+    echo "      --skip-checksum    don't validate archive hash"
+    echo "  -h, --help             help for $Command"
 }
 function appsInstallOne
 {
