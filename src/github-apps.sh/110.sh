@@ -20,6 +20,7 @@ function installHelp
     echo "  -y, --yes              automatic yes to prompts"
     echo "  -n, --no               automatic no to prompts"
     echo "      --skip-checksum    don't validate archive hash"
+    echo "  -k, --keep             keep (don't delete) download file"
     echo "  -h, --help             help for $Command"
 }
 function appsInstallOne
@@ -68,7 +69,7 @@ function appsInstall
     FlagsClear
 
     local ARGS
-    ARGS=`getopt -o htv:yn --long help,test,version:,yes,no,skip-checksum -n "$Command" -- "$@"`
+    ARGS=`getopt -o hktv:yn --long help,keep,test,version:,yes,no,skip-checksum -n "$Command" -- "$@"`
     eval set -- "${ARGS}"
     while true
     do
@@ -76,6 +77,10 @@ function appsInstall
         -h|--help)
             installHelp
             return 0
+        ;;
+        -k|--keep)
+            FlagKeep=1
+            shift
         ;;
         -t|--test)
             FlagTest=1

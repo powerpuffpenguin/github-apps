@@ -40,6 +40,9 @@ function FlagsClear
     FlagUrlList=""
     # http url return tag version info
     FlagUrlTag=""
+
+    # if not 0 keep (don't delete) download file
+    FlagKeep=0
 }
 # Command
 # Root dir
@@ -107,6 +110,8 @@ function FlagsPush
     __FlagUrlLatest=$FlagUrlLatest
     __FlagUrlList=$FlagUrlList
     __FlagUrlTag=$FlagUrlTag
+
+    __FlagKeep=$FlagKeep
 }
 function FlagsPop
 {
@@ -127,4 +132,6 @@ function FlagsPop
     FlagUrlLatest=$__FlagUrlLatest
     FlagUrlList=$__FlagUrlList
     FlagUrlTag=$__FlagUrlTag
+
+    FlagKeep=$__FlagKeep
 }

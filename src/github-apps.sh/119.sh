@@ -90,7 +90,9 @@ function upgradeExecute
     # Wriete version
     AppsVersion "$app" "$FlagVersion"
     
-    echo rm "$file"
-    rm "$file"
+    if [[ $FlagKeep == 0 ]];then
+        echo rm "$file"
+        rm "$file"
+    fi
     echo "Successfully upgraded '$app' to '$FlagInstallDir'. $current -> $FlagVersion"
 }

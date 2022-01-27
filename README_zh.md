@@ -278,6 +278,7 @@ github-apps.sh 中定義了幾個全局變量，配置腳本和 github-apps.sh �
 |FlagUrlLatest| 字符串|    [github api 獲取最後發佈版本的地址](https://docs.github.com/en/rest/reference/releases#get-the-latest-release)|
 |FlagUrlList| 字符串|    [github api 獲取版本列表的地址](https://docs.github.com/en/rest/reference/releases#list-releases)|
 |FlagUrlTag| 字符串|    [github api 獲取指定版本的地址](https://docs.github.com/en/rest/reference/releases#get-a-release-by-tag-name)|
+|FlagKeep| 0 或者 1|    如果爲 1，不要刪除下載的安裝包|
 
 ## 回調函數
 

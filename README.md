@@ -277,6 +277,7 @@ Several global variables are defined in github-apps.sh, and the configuration sc
 |FlagUrlLatest| string|    [github api: the URL of the get last released version](https://docs.github.com/en/rest/reference/releases#get-the-latest-release)|
 |FlagUrlList| string|    [github api: the URL of the get version list](https://docs.github.com/en/rest/reference/releases#list-releases)|
 |FlagUrlTag| string|    [github api: the URL of the get last released by tag](https://docs.github.com/en/rest/reference/releases#get-a-release-by-tag-name)|
+|FlagKeep| 0 or 1|    if 1, keep (don't delete) download file|
 
 ## callback
 

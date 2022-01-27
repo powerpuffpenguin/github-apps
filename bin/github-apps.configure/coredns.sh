@@ -1,5 +1,67 @@
 selfName=""
 selfOS=""
+selfService="/etc/systemd/system/coredns.service"
+
+function selfCreateUser
+{
+    case "$selfOS" in
+        linux)
+            local group=$(egrep "^coredns:" /etc/group)
+            if [[ "$group" == "" ]];then
+                echo groupadd -r coredns
+                if [[ "$FlagTest" == 0 ]];then
+                    groupadd -r coredns
+                fi
+            fi
+            local user=$(egrep "^coredns:" /etc/passwd)
+            if [[ "$user" == "" ]];then
+                echo useradd -r -g coredns coredns
+                if [[ "$FlagTest" == 0 ]];then
+                    useradd -r -g coredns coredns 
+                fi
+            fi
+        ;;
+    esac
+}
+function selfRemoveUser
+{
+    case "$selfOS" in
+        linux)
+            local user=$(egrep "^coredns:" /etc/passwd)
+            if [[ "$user" != "" ]];then
+                echo userdel coredns
+                if [[ "$FlagTest" == 0 ]];then
+                    userdel coredns
+                fi
+            fi
+            local group=$(egrep "^coredns:" /etc/group)
+            if [[ "$group" != "" ]];then
+                echo groupdel coredns
+                if [[ "$FlagTest" == 0 ]];then
+                    groupdel coredns
+                fi
+            fi
+        ;;
+    esac
+}
+function selfChown
+{
+    case "$selfOS" in
+        linux)
+            chown coredns.coredns "$1"
+        ;;
+    esac
+}
+function selfMkdir
+{
+    if [[ ! -d "$1" ]];then
+        echo mkdir "$1"
+        if [[ "$FlagTest" == 0 ]];then
+            mkdir "$1"
+            selfChown "$1"
+        fi
+    fi
+}
 # Callback before install or upgrade or remove
 #
 # Usually here it is checked whether the platform is supported and a platform dependent variable can be set
@@ -65,6 +127,9 @@ function AppsSetFile
         FlagDownloadHash=$url
     fi
 }
+# Optional implementation for returning and setting the version number
+#
+# If not provided this function will create an apps.version file to store the version number
 function AppsVersion
 {
     # local app="$1"
@@ -85,52 +150,108 @@ function AppsVersion
     fi
 }
 
+function selfCreateConf
+{
+    if [[ -f "$1" ]];then
+        return
+    fi
+
+    echo "configure: $1"
+    if [[ "$FlagTest" != 0 ]];then
+        return
+    fi
+
+    echo '.:10053 {
+cache
+forward . 127.0.0.1:10054 {
+}
+}' > "$1"
+    selfChown "$1"
+}
+function selfCreateServce
+{
+    if [[ -f "$1" ]];then
+        return
+    fi
+
+    echo "service: $1"
+    if [[ "$FlagTest" != 0 ]];then
+        return
+    fi
+
+    echo '[Unit]
+Description=CoreDNS Service
+After=network-online.target
+Wants=network-online.target
+ 
+[Service]
+Type=simple
+User=coredns
+ExecStart=/opt/coredns/coredns -conf /opt/coredns/Corefile
+KillMode=control-group
+Restart=on-failure
+RestartSec=5s
+LimitNOFILE=1048576
+
+[Install]
+WantedBy=multi-user.target
+' > "$1"
+    selfChown "$1"
+}
 # Unzip the package to the installation path
 # 
 # The FlagTest flag should be evaluated to determine whether to actually operate
 function AppsUnpack
 {
-    local file="$1"
-    if [[ ! -d "$FlagInstallDir" ]];then
-        echo mkdir "$FlagInstallDir"
-        if [[ "$FlagTest" == 0 ]];then
-            mkdir "$FlagInstallDir"
-        fi
-    fi
+    selfCreateUser
+    selfMkdir "$FlagInstallDir"
+
     echo tar -zxvf "$1" -C "$FlagInstallDir"
     if [[ "$FlagTest" == 0 ]];then
         tar -zxvf "$1" -C "$FlagInstallDir"
     fi
 
-    if [[ ! -f "$file" ]];then
-        echo "create default configure: $FlagInstallDir/Corefile"
-        if [[ "$FlagTest" == 0 ]];then
-            local file="$FlagInstallDir/Corefile"
-            echo '.:10053 {
-	cache
-	forward . 127.0.0.1:10054 {
-	}
-}' > "$file"
-        fi
-    fi
+    selfCreateConf "$FlagInstallDir/Corefile"
+    selfCreateServce "$selfService"
 }
+function selfRemoveFile
+{
+    if [[ ! -f "$1" ]];then
+        return
+    fi
+    echo rm "$1"
+    if [[ "$FlagTest" != 0 ]];then
+        return
+    fi
+    rm "$1"
+}
+
+function selfRemoveDir
+{
+    if [[ ! -d "$1" ]];then
+        return
+    fi
+    if [[ "$(ls -A $1)" != "" ]];then
+        return
+    fi
+    echo rmdir "$1"
+    if [[ "$FlagTest" != 0 ]];then
+        return
+    fi
+    rmdir "$1"
+}
+# Delete app from disk
+# 
+# The FlagTest flag should be evaluated to determine whether to actually operate
 function AppsRemove
 {
-    local dir=$FlagInstallDir
-    local file="$dir/coredns"
-    if [[ -f "$file" ]];then
-        echo rm "$file"
-        if [[ "$FlagTest" == 0 ]];then
-            rm "$file"
-        fi
-    fi
+    selfRemoveFile "$FlagInstallDir/coredns"
     if [[ "$FlagDeleteConf" != 0 ]];then
-        local conf="$dir/Corefile"
-        if [[ -f "$conf" ]];then
-            echo rm "$conf"
-            if [[ "$FlagTest" == 0 ]];then
-                rm "$conf"
-            fi
-        fi
+        selfRemoveFile "$FlagInstallDir/Corefile"
+    fi
+    selfRemoveFile "$selfService"
+    selfRemoveDir "$FlagInstallDir"
+    if [[ "$FlagDeleteData" != 0 ]];then
+        selfRemoveUser
     fi
 }

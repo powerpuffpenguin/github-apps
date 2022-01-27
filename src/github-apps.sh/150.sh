@@ -18,6 +18,7 @@ function appsSelfHelp
     echo "  -a, --all              also delete the configuration file and data file"
     echo "  -c, --conf             also delete the configuration file"
     echo "  -d, --data             also delete the data file"
+    echo "  -k, --keep             keep (don't delete) download file"
     echo "  -h, --help             help for $Command"
 }
 function appsSelf
@@ -26,7 +27,7 @@ function appsSelf
     GithubAppsSourceSelf=1
 
     local ARGS
-    ARGS=`getopt -o htiuv:racdyn --long help,test,install,upgrade,version:,remove,all,conf,data,yes,no,skip-checksum -n "$Command" -- "$@"`
+    ARGS=`getopt -o hktiuv:racdyn --long help,keep,test,install,upgrade,version:,remove,all,conf,data,yes,no,skip-checksum -n "$Command" -- "$@"`
     eval set -- "${ARGS}"
     local install=0
     local upgrade=0
@@ -40,6 +41,10 @@ function appsSelf
         -h|--help)
             appsSelfHelp
             return 0
+        ;;
+        -k|--keep)
+            FlagKeep=1
+            shift
         ;;
         -t|--test)
             FlagTest=1

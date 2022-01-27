@@ -65,7 +65,7 @@ __powerpuffpenguin_github_apps_cache()
 }
 __powerpuffpenguin_github_apps_self()
 {
-    local opts="-h --help \
+    local opts="-h --help -k --keep \
         -t --test -v --version -y --yes -n --no --skip-checksum \
         -i --install -u --upgrade -r --remove \
         -a --all -c --conf -d --data"
@@ -82,7 +82,7 @@ __powerpuffpenguin_github_apps_self()
 __powerpuffpenguin_github_apps_install()
 {
     local apps=`github-apps.sh list 2> /dev/null`
-    local opts="-h --help \
+    local opts="-h --help -k --keep \
         -t --test -v --version -y --yes -n --no \
         --skip-checksum $apps"
     local previous=${COMP_WORDS[COMP_CWORD-1]}
@@ -98,7 +98,7 @@ __powerpuffpenguin_github_apps_install()
 __powerpuffpenguin_github_apps_upgrade()
 {
     local apps=`github-apps.sh list -i 2> /dev/null`
-    local opts="-h --help \
+    local opts="-h --help -k --keep \
         -t --test -v --version -y --yes -n --no \
         --skip-checksum $apps"
     local previous=${COMP_WORDS[COMP_CWORD-1]}
@@ -130,6 +130,13 @@ __powerpuffpenguin_github_apps_remove()
 __powerpuffpenguin_github_apps()
 {
     local cur=${COMP_WORDS[COMP_CWORD]}
+    local previous=${COMP_WORDS[COMP_CWORD-1]}
+    case "$previous" in
+        ">"|">>")
+            _filedir || COMPREPLY=( $(compgen -o plusdirs -f ${cur}) )
+            return
+        ;;
+    esac
     if [ 1 == $COMP_CWORD ];then
         local opts="-h --help -v --version -m --metadata \
             completion list cache self \
