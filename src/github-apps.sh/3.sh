@@ -46,7 +46,7 @@ function AppsVersion
             AppsVersionValue=$str
         fi
     else
-        echo write version "'$version'"
+        echo write version "$version"
     fi
 }
 function AppsUnpack

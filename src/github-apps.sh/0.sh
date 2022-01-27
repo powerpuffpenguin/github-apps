@@ -44,7 +44,11 @@ function FlagsClear
 # Command
 Command=$(basename $BASH_SOURCE)
 # Root dir
-Root=$(cd $(dirname $BASH_SOURCE) && pwd)
+if [[ "$BASH_SOURCE" == "" ]];then
+    Root=$(pwd)
+else
+    Root=$(cd $(dirname $BASH_SOURCE) && pwd)
+fi
 # Configure dir
 Configure="$Root/github-apps.configure"
 # Cache dir
