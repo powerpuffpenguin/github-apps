@@ -45,11 +45,13 @@ github 上存在大量有用且有趣的開源項目，然而使用它們的一�
 
 # 安裝
 
+本腳本使用 curl 下載安裝包以及請求 github api，請參考 [curl](https://curl.se/download.html) 官網進行安裝。
+
 現在你可以[下載壓縮包](https://github.com/powerpuffpenguin/github-apps/releases)並解壓到 /usr/bin 路徑即可使用，等本喵寫完說明會寫個安裝腳本屆時就可以輸入指令自動安裝
 
 # 如何使用
 
-所有的命令和子命令都可以傳入 -h 查看使用說明，本腳本支持如下幾個子命令
+所有的命令和子命令都可以傳入 `-h` 查看使用說明，本腳本支持如下幾個子命令：
 
 * [completion](#completion)
 * [list](#list)
@@ -121,7 +123,7 @@ install 可以接受多個要安裝的應用名稱，腳本會依次安裝，下
 github-apps.sh install coredns ariang
 ```
 
-install 默認會從 github 上查找最後一個完整的發佈版本進行安裝，你可以使用 `-v` 參數指定一個要安裝的版本，但是如果使用 `-v` 參數 install 就只能接受一個要安裝的應用，下面將安裝 v1.2.0 版本的 coredns
+install 默認會從 github 上查找最後一個完整的發佈版本進行安裝，你可以使用 `-v` 參數指定一個要安裝的版本，但是如果使用 `-v` 參數 install 就只能接受一個要安裝的應用。下面的指令將安裝 v1.2.0 版本的 coredns
 
 ```
 github-apps.sh install coredns -v v1.2.0
@@ -156,7 +158,7 @@ github-apps.sh upgrade
 ```
 github-apps.sh remove -h
 ```
-remove 同樣可以接受多個要刪除的應用名稱，腳本會依次執行刪除。下面的指令將升級 coredns 和 ariang 兩個應用
+remove 同樣可以接受多個要刪除的應用名稱，腳本會依次執行刪除。下面的指令將刪除 coredns 和 ariang 兩個應用
 
 ```
 github-apps.sh remove coredns ariang
@@ -203,7 +205,7 @@ MAJOR MINOR PATCH 是一個正整數，MAJOR 是主版本號，當應用升級�
 
 # 配置腳本
 
-不同的開源應用安裝配置都各不相同，爲了支持它們需要創建**配置腳本**。github-apps.sh 負責解析用戶傳入的參數，查找應用版本並下載等複雜的操作，而用戶需要自己爲應用編寫配置腳本用於指定安裝路徑，解壓壓縮包到磁盤，刪除磁盤等操作。
+不同的開源應用安裝配置都各不相同，爲了支持它們需要創建 **配置腳本**。github-apps.sh 負責解析用戶傳入的參數，查找應用版本並下載等複雜的操作，而用戶需要自己爲應用編寫配置腳本用於指定安裝路徑，解壓壓縮包到磁盤，刪除磁盤等操作。
 
 配置腳本需要設置到 github-apps.sh 所在路徑的 **github-apps.configure** 檔案夾下並且以 .sh 爲後綴的 bash 腳本。github-apps.sh 會使用 source 來加載配置腳本。
 
@@ -294,17 +296,20 @@ AppsVersion 是可選實現的
 
 ## 其它源的應用
 
-github-apps.sh 默認只能支持 github 上發佈的應用，因爲它只解析了 github api 返回的數據，但是如果有另外一個網站返回類似 github api 的返回結果則 github-apps.sh 也可以工作。此外有兩個回調函數可以在你的配置檔案中重寫，用於替代默認的 github api 請求與解析
+github-apps.sh 默認只能支持 github 上發佈的應用，因爲它只解析了 github api 返回的數據，但是如果有另外一個網站返回類似 github api 的返回結果則 github-apps.sh 也可以工作。此外有兩個回調函數可以在你的配置檔案中重寫，用於替代默認的 github api 請求與解析以支持額外來源的應用：
+
+* [AppsRequestVersion](#AppsRequestVersion)
+* [AppsRequestVersionList](#AppsRequestVersionList)
 
 ## AppsRequestVersion
 
 如果配置腳本提供了此函數則會替代默認的版本請求，你需要在此函數中
 
-1. 依據全局變量 **RequestVersion** 如果爲空查找最後的發佈的完整版本信息，如果非空查找指定的版本信息。
+1. 依據全局變量 **FlagVersion** 如果爲空查找最後的發佈的完整版本信息，如果非空查找指定的版本信息。
 2. 調用 `VersionNext "找到的版本號"` 函數進行設置，並且判斷返回值 **VersionNextOk** 爲 1 以確定版本號格式被支持
 3. 將找到的版本號設置到變量 **FlagVersion** 中
 4. 將安裝包下載地址設置到 **FlagDownloadFile** 變量
-5. 如果存在 checksum 且 **FlagSum** 變量爲 0，則將 checksum 下載地址設置到 **FlagDownloadHash** 變量
+5. 如果存在 checksum 且 **FlagSum** 變量不爲 0，則將 checksum 下載地址設置到 **FlagDownloadHash** 變量
 
 ## AppsRequestVersionList
 
@@ -313,4 +318,4 @@ github-apps.sh 默認只能支持 github 上發佈的應用，因爲它只解析
 2. 調用 `VersionNext "找到的版本號"` 函數進行設置，並且判斷返回值 **VersionNextOk** 爲 1 以確定版本號格式被支持
 3. 將找到的版本號設置到變量 **FlagVersion** 中
 4. 將安裝包下載地址設置到 **FlagDownloadFile** 變量
-5. 如果存在 checksum 且 **FlagSum** 變量爲 0，則將 checksum 下載地址設置到 **FlagDownloadHash** 變量
+5. 如果存在 checksum 且 **FlagSum** 變量不爲 0，則將 checksum 下載地址設置到 **FlagDownloadHash** 變量
