@@ -3,13 +3,7 @@ function CallbackSelf
 {
     eval 'function AppsPlatform
 {
-    if [[ "$GithubAppsSelf" == 1 ]];then
-        FlagInstallDir="$Root"
-    elif [[ "$InstallDir" == "" ]];then
-        FlagInstallDir="/usr/bin"
-    else
-        FlagInstallDir="$InstallDir"
-    fi
+    FlagInstallDir="$Root"
 }
 function AppsSetUrl
 {
@@ -36,17 +30,10 @@ function AppsVersion
     # local app="$1"
     local version="$2"
     if [[ "$version" == "" ]];then
-        if [[ "$GithubAppsSelf" == 1 ]];then
-            AppsVersionValue="$Apps_Version"
-            return
-        fi
-        local exe="$FlagInstallDir/github-apps.sh"
-        if [[ -f "$exe" ]];then
-            local str=$("$exe" -v )
-            AppsVersionValue=$str
-        fi
+        AppsVersionValue="$Apps_Version"
+        return
     else
-        echo write version "$version"
+        echo write version $version
     fi
 }
 function AppsUnpack

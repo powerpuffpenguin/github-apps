@@ -126,11 +126,9 @@ function appsSelf
         appsInstallOne "github-apps.sh"
         return $?
     elif [[ $upgrade == 1 ]];then
-        GithubAppsSelf=1
         appsUpgradeOne "github-apps.sh"
         return $?
     elif [[ $remove == 1 ]];then
-        GithubAppsSelf=1
         appRemoveOne "github-apps.sh"
         return $?
     fi
