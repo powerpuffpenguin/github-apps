@@ -38,6 +38,7 @@ function appsMain
             echo "install: $Root"
             echo "   conf: $Configure"
             echo "  cache: $Cache"
+            echo "   libs: $appsLibs"
             return
         ;;
         completion)

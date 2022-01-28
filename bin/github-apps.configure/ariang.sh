@@ -1,16 +1,11 @@
 function AppsPlatform
 {
+    lib_Platform
     FlagInstallDir="/opt/ariang"
 }
 function AppsSetUrl
 {
-    local owner_repo="mayswind/AriaNg"
-    FlagUrlLatest="https://api.github.com/repos/$owner_repo/releases/latest"
-    FlagUrlList="https://api.github.com/repos/$owner_repo/releases"
-    if [[ "$FlagVersion" != "" ]];then
-        FlagUrlTag="https://api.github.com/repos/$owner_repo/releases/tags/$FlagVersion"
-    fi
-    return 0
+    lib_GithubSetUrl "mayswind/AriaNg"
 }
 function AppsSetFile
 {
@@ -22,24 +17,10 @@ function AppsSetFile
 }
 function AppsUnpack
 {
-    local file="$1"
-    if [[ ! -d "$FlagInstallDir" ]];then
-        echo mkdir "$FlagInstallDir"
-        if [[ "$FlagTest" == 0 ]];then
-            mkdir "$FlagInstallDir"
-        fi
-    fi
-    echo unzip -d "$FlagInstallDir" -o "$file"
-    if [[ "$FlagTest" == 0 ]];then
-        unzip -d "$FlagInstallDir" -o "$file"
-    fi
+    lib_MkdirAll "$FlagInstallDir"
+    lib_ZipUnpack "$1" "$FlagInstallDir" -o
 }
 function AppsRemove
 {
-    if [[ -d "$FlagInstallDir" ]];then
-        echo rm "$FlagInstallDir" -rf
-        if [[ "$FlagTest" == 0 ]];then
-            rm "$FlagInstallDir" -rf
-        fi
-    fi
+    lib_DeleteAll "$FlagInstallDir"
 }

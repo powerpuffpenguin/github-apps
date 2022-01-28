@@ -75,6 +75,9 @@ Apps=$(find "$Configure" -maxdepth 1 -name "*.sh" -type f | {
     while read file
     do
         name=$(basename "$file")
+        if [[ "$name" == "lib.sh" ]];then
+            continue
+        fi
         for str in $name
         do
             if [[ "$str" == "$name" ]];then
@@ -85,6 +88,21 @@ Apps=$(find "$Configure" -maxdepth 1 -name "*.sh" -type f | {
         done
     done
 })
+appsLibs=""
+if [[ -f "$Root/github-apps.configure/lib.sh" ]];then
+    source "$Root/github-apps.configure/lib.sh"
+    appsLibs="$Root/github-apps.configure/lib.sh"
+fi
+if [[ "$GithubAppsConfigure" != "" && "$GithubAppsConfigure" != "$Root/github-apps.configure" ]];then
+    if [[ -f "$GithubAppsConfigure/lib.sh" ]];then
+        source "$GithubAppsConfigure/lib.sh"
+        if [[ "$appsLibs" == "" ]];then
+            appsLibs="$GithubAppsConfigure/lib.sh"
+        else
+            appsLibs="$appsLibs:$GithubAppsConfigure/lib.sh"
+        fi
+    fi
+fi
 if [[ ! -d "$Cache" ]];then
     mkdir "$Cache"
     chmod 777 "$Cache" 
