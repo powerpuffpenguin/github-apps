@@ -84,10 +84,6 @@ function AppsUnpack
     for app in $apps
     do
         local dst="$FlagInstallDir/github-apps.configure/$app.sh"
-        if [[ "$app" != "lib.sh" &&  -f "$dst" ]];then
-            echo "file exists: $dst"
-            continue
-        fi
         local src="$confs/$app.sh"
         if [[ -f "$src" ]];then
             echo cp "github-apps.configure/$app.sh" "$dst"
