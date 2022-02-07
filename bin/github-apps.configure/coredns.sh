@@ -20,7 +20,7 @@ function AppsPlatform
             selfExec="coredns.exe"
             os=$lib_OS
         ;;
-        windows|darwin|linux)
+        darwin|linux)
             selfExec="coredns"
             os=$lib_OS
         ;;
