@@ -367,9 +367,9 @@ If provided through a configure script, this function is called to find the last
 
 As of v1.4.0, there are two environment variables to configure **GithubAppsConfigure** and **GithubAppsCache**
 
-github-apps.sh will look for configuration scripts in the github-apps.configure folder under its own installation path. You can set the environment variable GithubAppsConfigure to let github-apps.sh find configuration scripts from other paths.
+github-apps.sh will look for configuration scripts in the github-apps.configure folder under its own installation path. You can set the environment variable GithubAppsConfigure to make github-apps.sh load the configuration script in the path specified by GithubAppsConfigure first.
 
-github-apps.sh will store the downloaded temporary data in the github-apps.cache folder under its own installation path. You can set the environment variable GithubAppsCache to let github-apps.sh set other paths as cache paths for temporary data storage
+github-apps.sh will store the downloaded temporary data in the github-apps.cache folder under its own installation path. You can set the environment variable GithubAppsCache to let github-apps.sh set other paths as cache paths for temporary data storage.
 
 # lib
 
@@ -377,14 +377,14 @@ Starting from v1.4.0, a special lib.sh script can be created in the configuratio
 
 **care** In any case github-apps.sh will source github-apps.configure/lib.sh under the installation path. It means that even if you set the GithubAppsConfigure environment variable, github-apps.sh will first source the github-apps.configure/lib.sh file in the installation path, and then source the "$GithubAppsConfigure/lib.sh" file. This is so that the functions provided by the built-in lib.sh are always available. In addition, github-apps.sh will now overwrite `github-apps.configure/*.sh` in the installation path when updating to ensure that the configuration script is updated and valid.
 
-The recommended practice now is to set the GithubAppsConfigure environment variable, point the root path of the configuration script to your own personal folder, and then copy the configuration script you need from the installation path and modify it. For example, under ubuntu, you can add this setting at the bottom of the `~/.bashrc` file:
+The recommended practice now is to set the GithubAppsConfigure environment variable, point the root path of the configuration script to your own personal folder, and then copy the configuration script you need to modify from the installation path and modify it. For example, under ubuntu, you can add this setting at the bottom of the `~/.bashrc` file:
 
 ```
 # github-apps.sh
 alias github-apps.sh="sudo GithubAppsConfigure=~/.config/github-apps"
 ```
 
-Then copy the required configuration scripts from the github-apps.sh installation path to ~/.config/github-apps:
+Then copy the configuration script that needs to be modified from the github-apps.sh installation path to ~/.config/github-apps:
 
 ```
 mkdir ~/.config/github-apps
@@ -396,9 +396,9 @@ cp /usr/bin/github-apps.configure/ariang.sh ~/.config/github-apps/
 
 Setting the GithubAppsConfigure variable and overwriting the configuration script in the installation path when updating is for upgrade purposes. Because I think that although the configuration script is easy to write, the average user may not write it, and secondly, providing continuously updated and added configuration scripts can make this script more useful and easy to use.
 
-However, it is difficult for bash to upgrade the compatibility of configuration scripts (users may have modified configuration scripts), and when i adds many configuration scripts to support more open source applications, users may not need all of these configuration scripts. But they will all appear in the candidates for command completion, so the solution that i thought of was:
+However, it is difficult for bash to upgrade the compatibility of configuration scripts (users may have modified configuration scripts), so the solution that i thought of was:
 
-1. Create an environment variable GithubAppsConfigure to specify the user's own configuration path
-2. Users copy the required configuration scripts from the installation path to their own configuration paths
-Users copy the required configuration scripts from the installation path to their own configuration paths
-3. Now users can modify the configuration under their own installation path at will, and I can also update the configuration script under the installation path at will, which will not cause any conflicts
+1. Create an environment variable GithubAppsConfigure to specify the user's own configuration path.
+2. Users copy the required configuration scripts from the installation path to their own configuration paths.
+Users copy the required configuration scripts from the installation path to their own configuration paths.
+3. Now users can modify the configuration under the GithubAppsConfigure path at will, and I can also update the configuration script under the installation path at will, which will not cause any conflicts.

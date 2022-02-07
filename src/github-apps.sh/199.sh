@@ -8,37 +8,58 @@ function listHelp
     echo
     echo "Flags:"
     echo "  -i, --install          only list installed apps"
-    echo "  -v, --version          list apps installed version"
+    echo "  -d, --dir              print install dir"
+    echo "  -v, --verbose          list apps verbose info"
     echo "  -h, --help             help for $Command"
 }
 function appListOne
 {
+    local format="$1"
+    local i="$2"
+    local install="$3"
+    local width="$4"
+    local dir="$5"
+    local app=${apps[$i]}
+    local body=${appsBody[$i]}
+
     CallbackClear
     FlagsPush
-    local app="$1"
-    local flag="$2"
-    local install="$3"
-    source "$Configure/$app.sh"
+
+    sourceApp "$app"
     AppsPlatform
     if [[ "$FlagPlatformError" == "" ]];then
-        AppsVersion "$app"
-        if [[ "$install" == 1 && "$AppsVersionValue" == "" ]];then
-            FlagsPop
-            return
-        elif [[ "$flag" == 1 ]];then
-            echo "$app $AppsVersionValue"
+        if [[ "$install" == 1 || "$format" != "" ]];then
+            AppsVersion "$app"
+            if [[ "$AppsVersionValue" == "" && "$install" == 1 ]];then
+                FlagsPop
+                return
+            fi
+        fi
+        local str
+        if [[ "$format" == "" ]];then
+            str=$app
         else
-            echo "$app"
+            str=$(printf "$format" "$app" "$AppsVersionValue" "$body")
+        fi
+        if (($width>0));then
+            if ((${#str}>$width));then
+                str=${str:0:$width}
+            fi
+        fi
+        echo "$str"
+        if [[ $dir == 1 ]];then
+            echo "  install dir: $FlagInstallDir"
         fi
     fi
     FlagsPop
 }
 function appsList
 {
-    local version=0
+    local verbose=0
     local install=0
+    local dir=0
     local ARGS
-    ARGS=`getopt -o hiv --long help,install,version -n "$Command" -- "$@"`
+    ARGS=`getopt -o hivd --long help,install,verbose,dir -n "$Command" -- "$@"`
     eval set -- "${ARGS}"
     while true
     do
@@ -51,8 +72,12 @@ function appsList
             install=1
             shift
         ;;
-        -v|--version)
-            version=1
+        -v|--verbose)
+            verbose=1
+            shift   
+        ;;
+        -d|--dir)
+            dir=1
             shift   
         ;;
         --)
@@ -66,18 +91,26 @@ function appsList
         ;;
     esac
     done
-    
-    if [[ $version == 1 ]];then
+
+    local width=$(stty size|awk '{print $2}')
+
+    local format=""
+    if [[ $verbose == 1 ]];then
+        declare -i max=0
         local app
-        for app in $Apps
+        for app in "${apps[@]}"
         do
-            appListOne "$app" 1 $install
+            local n=${#app}
+            if (($max<$n));then
+                max=$n
+            fi
         done
-    else
-        local app
-        for app in $Apps
-        do
-            appListOne "$app" 0 $install
-        done
-    fi
+        max=max+3
+        format="%-${max}s %-9s %5s"
+    fi   
+    local i
+    for i in ${!apps[@]}
+    do
+        appListOne "$format" $i $install "$width" "$dir"
+    done
 }

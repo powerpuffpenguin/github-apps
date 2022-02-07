@@ -43,7 +43,7 @@ function appsInstallOne
    if [[ "$GithubAppsSourceSelf" == 1 ]];then
         CallbackSelf
    else
-       source "$Configure/$app.sh"
+       sourceApp "$app"
    fi
 
     AppsPlatform

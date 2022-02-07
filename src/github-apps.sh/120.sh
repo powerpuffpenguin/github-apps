@@ -46,7 +46,7 @@ function appsUpgradePush
     if [[ "$GithubAppsSourceSelf" == 1 ]];then
         CallbackSelf
     else
-        source "$Configure/$app.sh"
+        sourceApp "$app"
     fi
 
     appsUpgradePushFlags="$flags"
@@ -82,7 +82,7 @@ function appsUpgradeOne
 function appsUpgradeAll
 {
     local app
-    for app in $Apps
+    for app in $apps
     do
         appsUpgradePush "$app"
 

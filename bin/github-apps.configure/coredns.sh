@@ -8,6 +8,8 @@ selfExec=""
 #  * FlagInstallDir
 function AppsPlatform
 {
+    AppsBody="CoreDNS is a DNS server/forwarder, written in Go, that chains plugins. Each plugin performs a (DNS) function."
+
     # call lib identify the platform
     lib_Platform
 

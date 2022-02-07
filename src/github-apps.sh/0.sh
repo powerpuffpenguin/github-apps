@@ -71,23 +71,6 @@ fi
 if [[ ! -d "$Configure" ]];then
     mkdir "$Configure"
 fi
-Apps=$(find "$Configure" -maxdepth 1 -name "*.sh" -type f | {
-    while read file
-    do
-        name=$(basename "$file")
-        if [[ "$name" == "lib.sh" ]];then
-            continue
-        fi
-        for str in $name
-        do
-            if [[ "$str" == "$name" ]];then
-                name=${name%.sh}
-                echo "$name "
-            fi
-            break
-        done
-    done
-})
 appsLibs=""
 if [[ -f "$Root/github-apps.configure/lib.sh" ]];then
     source "$Root/github-apps.configure/lib.sh"

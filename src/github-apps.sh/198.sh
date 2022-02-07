@@ -54,7 +54,7 @@ function appsCompletion
 __powerpuffpenguin_github_apps_list()
 {
     local opts="-h --help \
-        -v --version -i --install"
+        -v --verbose -i --install -d --dir"
     COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
 }
 __powerpuffpenguin_github_apps_cache()

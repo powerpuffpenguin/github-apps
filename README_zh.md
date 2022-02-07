@@ -367,7 +367,7 @@ github-apps.sh 默認只能支持 github 上發佈的應用，因爲它只解析
 
 從 v1.4.0 開始，有兩個環境變量可以配置 **GithubAppsConfigure** 和 **GithubAppsCache**
 
-github-apps.sh 會在自己的安裝路徑下的 github-apps.configure 檔案夾中查找配置腳本，你可以設置環境變量 GithubAppsConfigure 讓 github-apps.sh 從其它路徑查找配置腳本
+github-apps.sh 會在自己的安裝路徑下的 github-apps.configure 檔案夾中查找配置腳本，你可以設置環境變量 GithubAppsConfigure 讓 github-apps.sh 優先加載 GithubAppsConfigure 指定路徑下的配置腳本
 
 github-apps.sh 會將下載的臨時數據存儲到自己安裝路徑下的 github-apps.cache 檔案夾中，你可以設置環境變量 GithubAppsCache 讓 github-apps.sh 將其它路徑設置爲緩存路徑用於存儲臨時數據
 
@@ -377,14 +377,14 @@ github-apps.sh 會將下載的臨時數據存儲到自己安裝路徑下的 gith
 
 **注意** 無論如何 github-apps.sh 都會 source 安裝路徑下的 github-apps.configure/lib.sh。意思是說即使你設置了 GithubAppsConfigure 環境變量，github-apps.sh 會首先 source 安裝路徑下的 github-apps.configure/lib.sh 檔案，之後在 source "$GithubAppsConfigure/lib.sh" 檔案，這樣是爲了讓內置的 lib.sh 提供的函數始終可用。此外現在 github-apps.sh 會在更新時覆蓋安裝路徑下的 `github-apps.configure/*.sh` 以保證配置腳本的更新與有效。
 
-現在推薦的做法是設置 GithubAppsConfigure 環境變量，將配置腳本的根路徑指向你自己的個人檔案夾中，讓後將你需要的配置腳本從安裝路徑中拷貝過去再進行修改。例如你在ubuntu 下可以在 `~/.bashrc` 檔案最下面添加上這樣的設定：
+現在推薦的做法是設置 GithubAppsConfigure 環境變量，將配置腳本的根路徑指向你自己的個人檔案夾中，然後將你需要修改的配置腳本從安裝路徑中拷貝過去再進行修改。例如你在ubuntu 下可以在 `~/.bashrc` 檔案最下面添加上這樣的設定：
 
 ```
 # github-apps.sh
 alias github-apps.sh="sudo GithubAppsConfigure=~/.config/github-apps"
 ```
 
-然後再把需要的配置腳本從 github-apps.sh 安裝路徑拷貝到 ~/.config/github-apps 中：
+然後再把需要修改的配置腳本從 github-apps.sh 安裝路徑拷貝到 ~/.config/github-apps 中：
 
 ```
 mkdir ~/.config/github-apps
@@ -396,8 +396,8 @@ cp /usr/bin/github-apps.configure/ariang.sh ~/.config/github-apps/
 
 設置 GithubAppsConfigure 變量和更新時覆蓋安裝路徑下的配置腳本是處於升級目的的考慮，因爲本喵考慮到雖然配置腳本很容易寫，但一般用戶可能還是不會寫，其次提供持續更新和增加的配置腳本可以使本腳本變得更有用與好用。
 
-然而 bash 很難做到對配置腳本的兼容性升級(用戶可能修改了配置腳本)，並且當本喵添加了很多配置腳本以支持更多開源應用時，用戶可能並不需要這些全部的配置腳本，但它們都會出現在命令補齊的候選中，所以本喵想到的解決方案就是：
+然而 bash 很難做到對配置腳本的兼容性升級(用戶可能修改了配置腳本)，所以本喵想到的解決方案就是：
 
 1. 創建一個環境變量 GithubAppsConfigure 來指定用戶自己的配置路徑
-2. 用戶將需要的配置腳本從安裝路徑拷貝到自己的配置路徑
-3. 現在用戶可以隨意修改自己安裝路徑下的配置，本喵也可以隨意更新安裝路徑下的配置腳本，這不會發生任何衝突
+2. 用戶將需要修改的配置腳本從安裝路徑拷貝到自己的配置路徑
+3. 現在用戶可以隨意修改 GithubAppsConfigure 徑下的配置，本喵也可以隨意更新安裝路徑下的配置腳本，這不會發生任何衝突
