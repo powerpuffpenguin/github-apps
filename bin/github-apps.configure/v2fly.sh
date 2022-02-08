@@ -154,10 +154,9 @@ function AppsRemove
     if [[ "$FlagDeleteConf" != 0 ]];then
         lib_DeleteFile "$FlagInstallDir/config.json"
     fi
-    if [[ "$FlagDeleteData" != 0 ]];then
-        lib_DeleteFile "$FlagInstallDir/geosite.dat"
-        lib_DeleteFile "$FlagInstallDir/geoip.dat"
-    fi
+
+    lib_DeleteFile "$FlagInstallDir/geosite.dat"
+    lib_DeleteFile "$FlagInstallDir/geoip.dat"
 
     lib_DeleteDir "$FlagInstallDir"
 
