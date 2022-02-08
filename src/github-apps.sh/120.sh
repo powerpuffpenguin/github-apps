@@ -91,7 +91,7 @@ function appsUpgradeAll
             FlagsPop
             continue
         fi
-
+        AppsVersionValue=""
         AppsVersion "$app"
         if [[ "$AppsVersionValue" == "" ]];then
             FlagsPop

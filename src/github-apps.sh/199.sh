@@ -29,6 +29,7 @@ function appListOne
     AppsPlatform
     if [[ "$FlagPlatformError" == "" ]];then
         if [[ "$install" == 1 || "$format" != "" ]];then
+            AppsVersionValue=""
             AppsVersion "$app"
             if [[ "$AppsVersionValue" == "" && "$install" == 1 ]];then
                 FlagsPop

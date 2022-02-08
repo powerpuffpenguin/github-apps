@@ -2,6 +2,7 @@ function upgradeExecute
 {
     local app="$1"
     # load current version
+    AppsVersionValue=""
     AppsVersion "$app"
     if [[ "$AppsVersionValue" == "" ]];then
         echo "get version error"
