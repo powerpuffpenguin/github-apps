@@ -19,7 +19,7 @@ function AppsPlatform
             os=$lib_OS
         ;;
         *)
-            FlagPlatformError="Not Supported: coredns on $lib_OS $lib_ARCH"
+            FlagPlatformError="Not Supported: v2fly on $lib_OS $lib_ARCH"
             return
         ;;
     esac
@@ -30,7 +30,7 @@ function AppsPlatform
             arch=64
         ;;
         *)
-            FlagPlatformError="Not Supported: coredns on $lib_OS $lib_ARCH"
+            FlagPlatformError="Not Supported: v2fly on $lib_OS $lib_ARCH"
             return
         ;;
     esac
