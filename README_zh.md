@@ -315,6 +315,14 @@ AppsHash 是可選實現的
 
 AppsHash 的默認實現是直接調用 `sha256sum "$1"`
 
+### AppsRequestHash
+
+AppsRequestHash 是可選實現的，從 v1.4.0 開始被支持
+
+如果 FlagDownloadHash 爲非空，則 AppsRequestHash 應該向 FlagDownloadHash 地址請求 hash 值，並將值寫入到 RequestHashValue 變量中。
+
+默認的 AppsRequestHash 會將響應的第一個字符串值作爲 hash，你可以參考  [v2fly.sh](https://github.com/powerpuffpenguin/github-apps/blob/main/bin/github-apps.configure/v2fly.sh) 中的例子來實現 AppsRequestHash 函數
+
 ### AppsUnpack
 
 AppsUnpack 的第一個傳入參數是下載的安裝包路徑，你需要在此函數中解開壓縮包將應用安裝到 **FlagInstallDir** 指定的路徑中去

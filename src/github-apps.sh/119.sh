@@ -62,7 +62,7 @@ function upgradeExecute
     fi
 
     # get hash
-    RequestHash
+    AppsRequestHash
     local hash=$RequestHashValue
 
     # download

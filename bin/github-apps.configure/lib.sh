@@ -273,3 +273,14 @@ function lib_GithubSetUrl
         FlagUrlTag="https://api.github.com/repos/$owner_repo/releases/tags/$FlagVersion"
     fi
 }
+
+# lib_CopyFile  src dst
+# * $1 src
+# * $2 dst
+function lib_CopyFile
+{
+    echo cp "\"$1\"" "\"$2\""
+    if [[ "$FlagTest" == 0 ]];then
+        cp "$1" "$2"
+    fi
+}

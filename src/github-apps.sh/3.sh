@@ -54,5 +54,11 @@ function AppsRequestVersionList
 {
     RequestVersionList
 }
+# set download hash
+# RequestHashValue
+function AppsRequestHash
+{
+    RequestHash
+}
 '
 }

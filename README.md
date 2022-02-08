@@ -314,6 +314,14 @@ If FlagDownloadHash is set and the user does not use the **--skip-checksum** par
 
 The default implementation of AppsHash is to call `sha256sum "$1"` directly.
 
+### AppsRequestHash
+
+AppsRequestHash is optional and supported since v1.4.0.
+
+If FlagDownloadHash is non-null, AppsRequestHash should request the hash value from the FlagDownloadHash address and write the value into the RequestHashValue variable.
+
+The default AppsRequestHash will use the first string value of the response as a hash, you can refer to [v2fly.sh](https://github.com/powerpuffpenguin/github-apps/blob/main/bin/github-apps.configure /v2fly.sh) to implement the AppsRequestHash function.
+
 ### AppsUnpack
 
 The first incoming parameter of AppsUnpack is the path of the downloaded installation package. You need to unpack the compressed package in this function to install the application to the path specified by **FlagInstallDir**.

@@ -90,7 +90,7 @@ function installExecute
     fi
 
     # get hash
-    RequestHash
+    AppsRequestHash
     local hash=$RequestHashValue
 
     # download
