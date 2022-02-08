@@ -95,7 +95,7 @@ function AppsUnpack
 
     echo rm "$tmp" -rf
     rm "$tmp" -rf
-    Successfully installed "$github-apps.sh" to "$FlagInstallDir". "$FlagVersion"
+    echo Successfully installed "$github-apps.sh" to "$FlagInstallDir". "$FlagVersion"
     exit 0
 }
 function AppsRemove
